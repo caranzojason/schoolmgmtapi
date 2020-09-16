@@ -19,7 +19,7 @@ class EnrollmentController extends Controller
     {
         // return response()->json($refNo);
         if (Enrollment::where('ref_no', $refNo)->exists()) {
-            $enrollment = Enrollment::where('ref_no', $refNo)->get();
+            $enrollment = Enrollment::where('ref_no', $refNo)->first();
             return response()->json($enrollment, 200);
           } else {
             return response()->json([
