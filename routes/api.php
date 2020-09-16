@@ -32,4 +32,13 @@ Route::get('/studentgetAll','App\Http\Controllers\StudentController@getAll');
 
 Route::post('/students','App\Http\Controllers\StudentController@createStudent');
 
+//enrolment here
+Route::get('/enrollmentgetAll','App\Http\Controllers\EnrollmentController@getAll');
+
+Route::get('/enrollmentgetByReff/{refNo}', 'App\Http\Controllers\EnrollmentController@getByEnrolRefNo');
+
+Route::post('/enrollmentOnline','App\Http\Controllers\EnrollmentController@enrol');
+
+Route::post('/enrollmentMakePayment','App\Http\Controllers\EnrollmentController@makePayment');
+
 
