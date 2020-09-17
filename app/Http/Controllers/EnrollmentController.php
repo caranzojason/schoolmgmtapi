@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadRequest;
 use App\Models\Enrollment;
 use App\Models\EnrollmentPayment;
 
@@ -24,6 +25,19 @@ class EnrollmentController extends Controller
           } else {
             return response()->json([
               "message" => "ref_no not found"
+            ], 404);
+          }
+    }
+
+    public function getEnrolByEnrlNo($enrolNo)
+    {
+        // return response()->json($refNo);
+        if (Enrollment::where('id', $enrolNo)->exists()) {
+            $enrollment = Enrollment::where('id', $enrolNo)->first();
+            return response()->json($enrollment, 200);
+          } else {
+            return response()->json([
+              "message" => "Enroll Number "+$enrolNo+"  not found!"
             ], 404);
           }
     }
@@ -170,5 +184,26 @@ class EnrollmentController extends Controller
             throw new HttpException(500, $e->getMessage());
         }
     }
+
+    public function uploadFile(Request  $request)
+    {
+
+        //$file = $request->file('uploads');
+        // return $file->getClientOriginalExtension();
+        $uploadFolder = 'images';
+        $image = $request->file('uploads');
+        $image_uploaded_path = $image->store($uploadFolder, 'public');
+        // $uploadedImageResponse = array(
+        //    "image_name" => basename($image_uploaded_path),
+        //    "image_url" => Storage::disk('public')->url($image_uploaded_path),
+        //    "mime" => $image->getClientMimeType()
+        // );
+        
+
+        return response()->json([$image_uploaded_path
+    ], 200);
+    }
+
+    
 }
 

@@ -35,10 +35,16 @@ Route::post('/students','App\Http\Controllers\StudentController@createStudent');
 //enrolment here
 Route::get('/enrollmentgetAll','App\Http\Controllers\EnrollmentController@getAll');
 
-Route::get('/enrollmentgetByReff/{refNo}', 'App\Http\Controllers\EnrollmentController@getByEnrolRefNo');
-
-Route::post('/enrollmentOnline','App\Http\Controllers\EnrollmentController@enrol');
+Route::get('/enrollmentgetByEnrolNo/{enrolNo}', 'App\Http\Controllers\EnrollmentController@getEnrolByEnrlNo');
 
 Route::post('/enrollmentMakePayment','App\Http\Controllers\EnrollmentController@makePayment');
+
+Route::post('/enrollmentUpload','App\Http\Controllers\EnrollmentController@uploadFile');
+
+
+
+
+// Route::post('/enrollmentOnline','App\Http\Controllers\EnrollmentController@enrol');
+// Route::get('/enrollmentgetByReff/{refNo}', 'App\Http\Controllers\EnrollmentController@getByEnrolRefNo');
 
 
