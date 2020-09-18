@@ -12,4 +12,18 @@ class GradeController extends Controller
         $grade = Grade::all();
         return response()->json($grade);
     }
+
+    public function getGrades($deptId)
+    {
+        if (Grade::where('department_id', $deptId)->exists()) {
+            $grade = Grade::where('department_id', $deptId)->get();
+            return response()->json($grade, 200);
+          } else {
+            return response()->json([
+              "message" => "Department Id "+$deptId+"  not found!"
+            ], 404);
+          }
+    }
+
+    
 }

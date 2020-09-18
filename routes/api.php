@@ -24,7 +24,13 @@ Route::get('/departmentgetAll','App\Http\Controllers\DepartmentController@getAll
 
 Route::get('/coursesgetAll','App\Http\Controllers\CoursesController@getAll');
 
+Route::get('/coursesgetByDeptId/{deptId}','App\Http\Controllers\CoursesController@getByDeptId');
+
 Route::get('/gradegetAll','App\Http\Controllers\GradeController@getAll');
+
+Route::get('/strandAll','App\Http\Controllers\StrandController@getAll');
+
+Route::get('/gradesByDepId/{deptId}','App\Http\Controllers\GradeController@getGrades');
 
 Route::get('/classesgetAll','App\Http\Controllers\ClassesController@getAll');
 
@@ -41,10 +47,7 @@ Route::post('/enrollmentMakePayment','App\Http\Controllers\EnrollmentController@
 
 Route::post('/enrollmentUpload','App\Http\Controllers\EnrollmentController@uploadFile');
 
-
-
-
-// Route::post('/enrollmentOnline','App\Http\Controllers\EnrollmentController@enrol');
+Route::post('/enrol','App\Http\Controllers\EnrollmentController@enrol');
 // Route::get('/enrollmentgetByReff/{refNo}', 'App\Http\Controllers\EnrollmentController@getByEnrolRefNo');
 
 

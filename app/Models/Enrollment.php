@@ -105,3 +105,72 @@ class Enrollment extends Model
     'school_year'];
     public $timestamps = false;
 }
+
+//these are form of University of Cebu
+//elementary
+// studenNo(idNo) /username
+// Grade: Kinder,Nursery, 1,2,3,4,5,6
+// LastName
+// FirstName 
+// MiddleInitial
+// Suffix/Extension 
+// Gender: Male,Female
+// BirthDate
+// BirthPlace
+// Contact 
+// Email
+// landlineno 
+// FaceBookProfileLink
+// CityAddress
+// CityAddressZipCode
+// ProvinceAddress
+// ProvinceAddressZipCode
+// LRN
+// NameLastSchoolAttended(for elementary)
+// SchoolAddress(for elementary)
+// ElementarySchoolGraduated
+// ElementarySchoolGraduatedAddress
+// ElemntarySchoolYearGraduated
+// JuniorHighSchoolGraduated
+// JuniorHighSchoolGraduatedAddress
+// JuniorHighSchoolYearGraduated
+// SenioHighSchoolGraduated
+// SeniorHighSchoolGraduatedAddress
+// SeniorHighSchoolYearGraduated
+// TrackAndStrandGraduated
+
+// SchoolYearLastAttended ex: 2019 - 2020
+// School Type (Public/Private)
+// MotherName 
+// MotherContact
+// MotherEmail
+// MotherOccupation
+// FatherName
+// FatherContact
+// FatherEmail 
+// FatherOccupation
+// GuardianName
+// Contact 
+
+
+// //college uniqueField
+// CivilStatus
+// CollegeSchoolGraduated(for transfere/graduated school)
+// CollegeAchoolYearGraduated(yyyy)(for transfere/graduated school)
+// LastSchoolSemesterAttended(for transfere/graduated school)
+// ProgramOrCourse(for transfere/graduated school)
+// ACRNO(forForeiner)
+// Spousename(if married)
+// SpouseAddress
+// Spousezipcode
+// SpouseProvincialAddress
+// SpouseProvincialZipCode
+// SuportingStudies
+// CompanyName
+// CompanyAddress
+
+// Attachment:
+// userId, Attachment
+
+
+

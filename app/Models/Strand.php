@@ -5,10 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Department extends Model
+class Strand extends Model
 {
     use HasFactory;
     protected $primaryKey = 'id';
-    protected $table = 'department';
-    protected $fillable = ['id','code','name','status'];
+    protected $table = 'strand';
+    protected $fillable = ['id','name'];
 }

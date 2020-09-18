@@ -12,4 +12,11 @@ class DepartmentController extends Controller
         $department = Department::all();
         return response()->json($department);
     }
+
+    public function coursesgetByDeptId()
+    {
+        $department = Department::all();
+        return response()->json($department);
+    }
+    
 }
