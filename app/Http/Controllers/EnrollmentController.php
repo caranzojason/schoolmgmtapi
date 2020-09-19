@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\UploadRequest;
 use App\Models\Enrollment;
 use App\Models\EnrollmentPayment;
+use App\Models\Users;
 
 class EnrollmentController extends Controller
 {
@@ -92,11 +93,30 @@ class EnrollmentController extends Controller
     }
     */
 
+    function generateBarcodeNumber() {
+        $number = mt_rand(1000000000, 9999999999); // better than rand()
+    
+        // call the same function if the barcode exists already
+        if ($this->barcodeNumberExists($number)) {
+            return generateBarcodeNumber();
+        }
+    
+        // otherwise, it's valid and can be used
+        return $number;
+    }
+    
+    function barcodeNumberExists($number) {
+        // query the database and return a boolean
+        // for instance, it might look like this in Laravel
+        return Users::where('username', $number)->exists();
+    }
+
+
     public function enrol(Request $request)
     {
         try {
             $enroll = new Enrollment();
-            $enroll->ref_no = "x1234"; //todo should be the userid during login or enrol
+            $enroll->ref_no = $this->generateBarcodeNumber(); //todo should be the userid during login or enrol
             $enroll->type =  $request->type;
             $enroll->studentno =  $request->studentno;
             $enroll->firstname =  $request->firstname;
