@@ -14,9 +14,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
+// Route::middleware('auth:api')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
 
 Route::get('/test','App\Http\Controllers\TestController@index');
 
@@ -50,4 +50,7 @@ Route::post('/enrollmentUpload','App\Http\Controllers\EnrollmentController@uploa
 Route::post('/enrol','App\Http\Controllers\EnrollmentController@enrol');
 // Route::get('/enrollmentgetByReff/{refNo}', 'App\Http\Controllers\EnrollmentController@getByEnrolRefNo');
 
+
+//users here
+Route::post('/login','App\Http\Controllers\UserController@login');
 
