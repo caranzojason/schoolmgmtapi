@@ -58,6 +58,7 @@ class Enrollment extends Model
 {
     use HasFactory;
     protected $table = 'enrollment';
+    protected $casts = [ 'department' => 'integer'];
     protected $fillable = ['id',
     'ref_no',
     'type',

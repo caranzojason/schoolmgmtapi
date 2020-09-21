@@ -48,7 +48,10 @@ Route::post('/enrollmentMakePayment','App\Http\Controllers\EnrollmentController@
 Route::post('/enrollmentUpload','App\Http\Controllers\EnrollmentController@uploadFile');
 
 Route::post('/enrol','App\Http\Controllers\EnrollmentController@enrol');
-// Route::get('/enrollmentgetByReff/{refNo}', 'App\Http\Controllers\EnrollmentController@getByEnrolRefNo');
+
+Route::post('/enrolVerify','App\Http\Controllers\EnrollmentController@enrolVerify');
+Route::get('/enrollgetForverification','App\Http\Controllers\EnrollmentController@getForverification');
+
 
 
 //users here

@@ -32,6 +32,7 @@ class UserController extends Controller
                 $objResult['session'] = openssl_encrypt($request->password,"AES-128-ECB",$request->password);
                 $objResult['found'] = true;
             }else{
+                //password should be given ex: 20031030 equivalent to year: 2003 month: 10: day: 30
                 $dob = substr($request->password, 0, 4).'-'.substr($request->password, 4, 2).'-'.substr($request->password, 6, 2);
                 $matchThese = ['ref_no' => $request->username, 'dob' =>    $dob ];
                 $results = Enrollment::where($matchThese)->first();
