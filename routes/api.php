@@ -42,6 +42,7 @@ Route::post('/students','App\Http\Controllers\StudentController@createStudent');
 Route::get('/enrollmentgetAll','App\Http\Controllers\EnrollmentController@getAll');
 
 Route::get('/enrollmentgetByEnrolNo/{enrolNo}', 'App\Http\Controllers\EnrollmentController@getEnrolByEnrlNo');
+Route::get('/enrollmentgetByReff/{refNo}', 'App\Http\Controllers\EnrollmentController@getByEnrolRefNo');
 
 Route::post('/enrollmentMakePayment','App\Http\Controllers\EnrollmentController@makePayment');
 
