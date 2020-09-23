@@ -239,10 +239,57 @@ class EnrollmentController extends Controller
         // );
         
 
-        return response()->json([$image_uploaded_path
-    ], 200);
+        return response()->json([$image_uploaded_path], 200);
     }
 
-    
+
+    // public function getEnro()
+    // {
+    //     $enrolment = Enrollment::all();
+    //     return response()->json($enrolment);
+    // }y/{page}/{pageSize}/{searchField}
+
+
+    /*$users = DB::table('users')->skip(10)->take(5)->get();*/
+    public function inquiry($page = 0,$pageSize = 0,$searchField = 0)
+    {
+            // $enrol = {"Enrollment":null,"NoOfRecords":0};
+
+            // $enrol= new stdClass();
+
+            $enrol = (object) [
+                'Enrollment' => [],
+                'NoOfRecords' => 0
+            ];
+
+            if($searchField != ""){
+         
+                $enrollment = Enrollment::where('ref_no','LIKE','%'.$searchField.'%')
+                ->orWhere('lastname','LIKE','%'.$searchField.'%')
+                ->orWhere('firstname','LIKE','%'.$searchField.'%')
+                ->orWhere('email','LIKE','%'.$searchField.'%')->orderby('lastname')->skip($page)->take($pageSize)->get();
+
+                $countEnrol = Enrollment::where('ref_no','LIKE','%'.$searchField.'%')
+                ->orWhere('lastname','LIKE','%'.$searchField.'%')
+                ->orWhere('firstname','LIKE','%'.$searchField.'%')
+                ->orWhere('email','LIKE','%'.$searchField.'%')->orderby('lastname')->count();
+
+                $enrol->Enrollment = $enrollment;
+                $enrol->NoOfRecords = $countEnrol;
+                return response()->json($enrol, 200);
+            }else{
+                $enrollment = Enrollment::skip($page)->take($pageSize)->orderby('ref_no')->get();
+
+                $countEnrol = Enrollment::where('ref_no','LIKE','%'.$searchField.'%')
+                ->orWhere('lastname','LIKE','%'.$searchField.'%')
+                ->orWhere('firstname','LIKE','%'.$searchField.'%')
+                ->orWhere('email','LIKE','%'.$searchField.'%')->orderby('lastname')->count();
+
+                $enrol->Enrollment = $enrollment;
+                $enrol->NoOfRecords = $countEnrol;
+                return response()->json($enrol, 200);
+            }
+
+    }
 }
 

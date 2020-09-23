@@ -42,7 +42,10 @@ Route::post('/students','App\Http\Controllers\StudentController@createStudent');
 Route::get('/enrollmentgetAll','App\Http\Controllers\EnrollmentController@getAll');
 
 Route::get('/enrollmentgetByEnrolNo/{enrolNo}', 'App\Http\Controllers\EnrollmentController@getEnrolByEnrlNo');
+
 Route::get('/enrollmentgetByReff/{refNo}', 'App\Http\Controllers\EnrollmentController@getByEnrolRefNo');
+
+Route::get('/enrollmentinquiry/{page?}/{pageSize?}/{searchField?}', 'App\Http\Controllers\EnrollmentController@inquiry');
 
 Route::post('/enrollmentMakePayment','App\Http\Controllers\EnrollmentController@makePayment');
 
@@ -51,6 +54,7 @@ Route::post('/enrollmentUpload','App\Http\Controllers\EnrollmentController@uploa
 Route::post('/enrol','App\Http\Controllers\EnrollmentController@enrol');
 
 Route::post('/enrolVerify','App\Http\Controllers\EnrollmentController@enrolVerify');
+
 Route::get('/enrollgetForverification','App\Http\Controllers\EnrollmentController@getForverification');
 
 
