@@ -16,9 +16,15 @@ class EnrollmentController extends Controller
         return response()->json($enrolment);
     }
 
+    public function getByStatus($status)
+    {
+        $enrollment = Enrollment::where('status', $status)->first();
+        return response()->json($enrollment, 200);
+    }
+
     public function getForverification()
     {
-        $enrollment = Enrollment::Where('status', '=', 'verified')->orderBy('created_at','DESC')->get();
+        $enrollment = Enrollment::Where('status', '=', 'pending')->orderBy('created_at','DESC')->get();
         return response()->json($enrollment, 200);
     }
 
@@ -72,6 +78,12 @@ class EnrollmentController extends Controller
     public function enrol(Request $request)
     {
         try {
+
+            $resp = (object) [
+                'ref_no' => "",
+                'password' => ""
+            ];
+
             $enroll = new Enrollment();
             $enroll->ref_no = $this->generateBarcodeNumber();
             $enroll->type =  $request->type;
@@ -110,7 +122,7 @@ class EnrollmentController extends Controller
             $enroll->last_school_year =  $request->last_school_year;
             $enroll->indigenous =  $request->indigenous;
             $enroll->learning_modality =  $request->learning_modality;
-            $enroll->status =  "O";//Open
+            $enroll->status =  "pending";//Open
             $enroll->validated_by =  $request->validated_by;
             $enroll->approved_by =  $request->approved_by;
             $enroll->cancelled_by =  $request->cancelled_by;
@@ -119,13 +131,77 @@ class EnrollmentController extends Controller
             $enroll->created_at =  $request->created_at;
             $enroll->school_year =  $request->school_year;
             $enroll->save();
-            return response()->json(["message" => "enrollment successfull"
-            ], 201);
+
+            $resp->ref_no = $enroll->ref_no;
+            $resp->password =  sprintf("%04d", $request->dob['year'] ) . sprintf("%02d", $request->dob['month'] ).  sprintf("%02d", $request->dob['day']) ;
+            return response()->json($resp , 201);
         } catch (Exception $e) {
             throw new HttpException(500, $e->getMessage());
         }
     }
 
+
+    public function updateEnrol(Request $request)
+    {
+        try {
+            // return response()->json( $request->department , 201);
+
+           
+
+            $enroll = Enrollment::find( $request->id);
+            $enroll->ref_no = $request->ref_no;
+            $enroll->type =  $request->type;
+            $enroll->studentno =  $request->studentno;
+            $enroll->firstname =  $request->firstname;
+            $enroll->middlename =  $request->middlename;
+            $enroll->lastname =  $request->lastname;
+            $enroll->email =  $request->email;
+            $enroll->grade =  $request->grade;
+            $enroll->department =  $request->department;
+            $enroll->strand =  $request->strand;
+            $strDate = $request->dob['year'] . "/" . $request->dob['month'] .'/'. $request->dob['day'];
+            $enroll->dob =  $strDate;
+            $enroll->place_of_birth =  $request->place_of_birth;
+            $enroll->contactno =  $request->contactno;
+            $enroll->address =  $request->address;
+            $enroll->nationality =  $request->nationality;
+            $enroll->age =  $request->age;
+            $enroll->gender =  $request->gender;
+            $enroll->religion =  $request->religion;
+            $enroll->fathername =  $request->fathername;
+            $enroll->fatherocc =  $request->fatherocc;
+            $enroll->fathercontact =  $request->fathercontact;
+            $enroll->fatherplace =  $request->fatherplace;
+            $enroll->mothername =  $request->mothername;
+            $enroll->motherocc =  $request->motherocc;
+            $enroll->mothercontact =  $request->mothercontact;
+            $enroll->motherplace =  $request->motherplace;
+            $enroll->guardian_name =  $request->guardian_name;
+            $enroll->guardian_contactno =  $request->guardian_contactno;
+            $enroll->guardian_relation =  $request->guardian_relation;
+            $enroll->last_school_attended =  $request->last_school_attended;
+            $enroll->last_school_grade_level =  $request->last_school_grade_level;
+            $enroll->last_school_date_of_attendance =  null;// $request->last_school_date_of_attendance;
+            $enroll->last_school_address =  $request->last_school_address;
+            $enroll->last_school_year =  $request->last_school_year;
+            $enroll->indigenous =  $request->indigenous;
+            $enroll->learning_modality =  $request->learning_modality;
+            $enroll->status =  "pending";//Open
+            $enroll->validated_by =  $request->validated_by;
+            $enroll->approved_by =  $request->approved_by;
+            $enroll->cancelled_by =  $request->cancelled_by;
+            $enroll->updated_by =  $request->updated_by;
+            $enroll->remarks =  $request->remarks;
+            $enroll->created_at =  $request->created_at;
+            $enroll->school_year =  $request->school_year;
+            $enroll->save();
+            return response()->json([
+                "message" => "Succesfully updated"
+            ], 201);
+        } catch (Exception $e) {
+            throw new HttpException(500, $e->getMessage());
+        }
+    }
 
     public function enrolVerify(Request $request)
     {

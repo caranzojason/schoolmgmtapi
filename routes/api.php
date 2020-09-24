@@ -53,11 +53,13 @@ Route::post('/enrollmentUpload','App\Http\Controllers\EnrollmentController@uploa
 
 Route::post('/enrol','App\Http\Controllers\EnrollmentController@enrol');
 
+Route::post('/updateEnrol','App\Http\Controllers\EnrollmentController@updateEnrol');
+
 Route::post('/enrolVerify','App\Http\Controllers\EnrollmentController@enrolVerify');
 
 Route::get('/enrollgetForverification','App\Http\Controllers\EnrollmentController@getForverification');
 
-
+//
 
 //users here
 Route::post('/login','App\Http\Controllers\UserController@login');
