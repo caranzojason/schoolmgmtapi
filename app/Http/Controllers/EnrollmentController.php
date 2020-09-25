@@ -37,8 +37,8 @@ class EnrollmentController extends Controller
             return response()->json($enrollment, 200);
           } else {
             return response()->json([
-              "message" => "ref_no not found"
-            ], 404);
+                
+            ], 200);
           }
     }
 
@@ -51,7 +51,7 @@ class EnrollmentController extends Controller
           } else {
             return response()->json([
               "message" => "Enroll Number "+$enrolNo+"  not found!"
-            ], 404);
+            ], 200);
           }
     }
 
@@ -136,7 +136,7 @@ class EnrollmentController extends Controller
             $resp->password =  sprintf("%04d", $request->dob['year'] ) . sprintf("%02d", $request->dob['month'] ).  sprintf("%02d", $request->dob['day']) ;
             return response()->json($resp , 201);
         } catch (Exception $e) {
-            throw new HttpException(500, $e->getMessage());
+            throw new HttpException(200, $e->getMessage());
         }
     }
 
@@ -144,10 +144,6 @@ class EnrollmentController extends Controller
     public function updateEnrol(Request $request)
     {
         try {
-            // return response()->json( $request->department , 201);
-
-           
-
             $enroll = Enrollment::find( $request->id);
             $enroll->ref_no = $request->ref_no;
             $enroll->type =  $request->type;
@@ -199,7 +195,7 @@ class EnrollmentController extends Controller
                 "message" => "Succesfully updated"
             ], 201);
         } catch (Exception $e) {
-            throw new HttpException(500, $e->getMessage());
+            throw new HttpException(200, $e->getMessage());
         }
     }
 
@@ -260,7 +256,7 @@ class EnrollmentController extends Controller
            // Enrollment::whereId( $request->id)->update([$enroll]);
             return response()->json($request, 200);
         } catch (Exception $e) {
-            throw new HttpException(500, $e->getMessage());
+            throw new HttpException(200, $e->getMessage());
         }
     }
     
@@ -281,52 +277,80 @@ class EnrollmentController extends Controller
     public function makePayment(Request $request)
     {
         try {
-            $enrolPayment = new EnrollmentPayment();
-            $enrolPayment->student_name =  $request->student_name;
-            $enrolPayment->enrollment_ref_no =  $request->enrollment_ref_no;
-            $enrolPayment->method =  $request->method;
-            $enrolPayment->amount =  $request->amount;
-            $enrolPayment->description =  $request->description;
-            $enrolPayment->approval_remarks =  $request->approval_remarks;
-            $enrolPayment->approval_status =  $request->approval_status;
-            $enrolPayment->created_at =  $request->created_at;
-            $enrolPayment->save();
-        
-            return response()->json([
-                "message" => "payment created"
-            ], 201);
+            $isExist = EnrollmentPayment::where('enrollment_ref_no', $request->enrollment_ref_no)->exists();
+
+            // return response()->json(   $isExist, 200);
+            if($isExist){
+                $enrolPayment = EnrollmentPayment::where('enrollment_ref_no', $request->enrollment_ref_no)->first();
+                $enrolPayment->student_name =  $request->student_name;
+                $enrolPayment->enrollment_ref_no =  $request->enrollment_ref_no;
+                $enrolPayment->method =  $request->method;
+                $enrolPayment->amount =  $request->amount;
+                $enrolPayment->description =  $request->description;
+                $enrolPayment->approval_remarks =  $request->approval_remarks;
+                $enrolPayment->approval_status =  $request->approval_status;
+                $enrolPayment->created_at =  $request->created_at;
+                $enrolPayment->save();
+                return response()->json([
+                    "message" => "payment created"
+                ], 200);
+            }else{
+                $enrolPayment = new EnrollmentPayment();
+                $enrolPayment->student_name =  $request->student_name;
+                $enrolPayment->enrollment_ref_no =  $request->enrollment_ref_no;
+                $enrolPayment->method =  $request->method;
+                $enrolPayment->amount =  $request->amount;
+                $enrolPayment->description =  $request->description;
+                $enrolPayment->approval_remarks =  $request->approval_remarks;
+                $enrolPayment->approval_status =  $request->approval_status;
+                $enrolPayment->created_at =  $request->created_at;
+                $enrolPayment->save();
+                return response()->json([
+                    "message" => "payment created"
+                ], 201);
+            }
+
         } catch (Exception $e) {
-            throw new HttpException(500, $e->getMessage());
+            throw new HttpException(200, $e->getMessage());
         }
     }
 
     public function uploadFile(Request  $request)
     {
+        if($request->hasFile('uploads'))
+        {
+            $file = $request->file('uploads');
+            $originalname = $file->getClientOriginalName();
+            $path = $file->storeAs('public/'.$request->enrolId, $originalname);
 
-        //$file = $request->file('uploads');
-        // return $file->getClientOriginalExtension();
-        $uploadFolder = 'images';
-        $image = $request->file('uploads');
-        $image_uploaded_path = $image->store($uploadFolder, 'public');
-        // $uploadedImageResponse = array(
-        //    "image_name" => basename($image_uploaded_path),
-        //    "image_url" => Storage::disk('public')->url($image_uploaded_path),
-        //    "mime" => $image->getClientMimeType()
-        // );
-        
+            $enrollmentPayment = EnrollmentPayment::where('enrollment_ref_no', $request->enrolId)->first();
+            $enrollmentPayment->filename =  $originalname;
+            $enrollmentPayment->attachmentpath = 'storage/' . $request->enrolId . '/' . $originalname;
+            $enrollmentPayment->save();
+        }        
 
-        return response()->json([$image_uploaded_path], 200);
+        return response()->json([
+            "message" => "Successfuly uploaded"
+        ], 200);
     }
 
+    public function retrieveFile(){
+        $pathToFile = storage_path('public/enrollmentpayment/SJCC-ENR-00202/afterlogin.PNG');
+        $getContent = file_get_contents($fileSource); // Here cURL can be use.
+        file_put_contents( $pathToFile, $getContent ); 
+        return response()->download($pathToFile, $fileName, $headers); 
+        return response()->json($path , 200);
+    }
 
-    // public function getEnro()
-    // {
-    //     $enrolment = Enrollment::all();
-    //     return response()->json($enrolment);
-    // }y/{page}/{pageSize}/{searchField}
+    public function getPayment($refNo){
+        if (EnrollmentPayment::where('enrollment_ref_no', $refNo)->exists()) {
+            $enrollmentPayment = EnrollmentPayment::where('enrollment_ref_no', $refNo)->first();
+            return response()->json($enrollmentPayment, 200);
+          } else {
+            return response()->json([], 200);
+          }
+    }
 
-
-    /*$users = DB::table('users')->skip(10)->take(5)->get();*/
     public function inquiry($page = 0,$pageSize = 0,$searchField = 0)
     {
             // $enrol = {"Enrollment":null,"NoOfRecords":0};

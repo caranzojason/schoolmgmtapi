@@ -59,7 +59,11 @@ Route::post('/enrolVerify','App\Http\Controllers\EnrollmentController@enrolVerif
 
 Route::get('/enrollgetForverification','App\Http\Controllers\EnrollmentController@getForverification');
 
-//
+Route::get('/enrollmentretrievefile','App\Http\Controllers\EnrollmentController@retrieveFile');
+
+Route::get('/enrollmentgetPayment/{refNo}','App\Http\Controllers\EnrollmentController@getPayment');
+
+//getPayment
 
 //users here
 Route::post('/login','App\Http\Controllers\UserController@login');
