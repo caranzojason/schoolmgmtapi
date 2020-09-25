@@ -31,7 +31,6 @@ class EnrollmentController extends Controller
     //http://127.0.0.1:8000/api/enrollmentgetByReff/SJCC-ENR-00001
     public function getByEnrolRefNo($refNo)
     {
-        // return response()->json($refNo);
         if (Enrollment::where('ref_no', $refNo)->exists()) {
             $enrollment = Enrollment::where('ref_no', $refNo)->first();
             return response()->json($enrollment, 200);
@@ -45,7 +44,6 @@ class EnrollmentController extends Controller
 
     public function getEnrolByEnrlNo($enrolNo)
     {
-        // return response()->json($refNo);
         if (Enrollment::where('id', $enrolNo)->exists()) {
             $enrollment = Enrollment::where('id', $enrolNo)->first();
             return response()->json($enrollment, 200);
@@ -253,34 +251,15 @@ class EnrollmentController extends Controller
             $enroll->school_year =  $request->school_year;
         
            $enroll->save();
-
-           // Enrollment::whereId( $request->id)->update([$enroll]);
             return response()->json($request, 200);
         } catch (Exception $e) {
             throw new HttpException(200, $e->getMessage());
         }
     }
-    
-    
-
-/* sample json of make payment
-        {
-        "student_name": "xxxxl",
-        "enrollment_ref_no": "SJCC-ENR-00001",
-        "method": "Cash",
-        "amount": 543.75,
-        "description": "Monthly",
-        "approval_remarks": "Received the amount of Five Hundred Forty Three Pesos only (Php. 543.00)",
-        "approval_status": 1,
-        "approval_date": "2020-06-10 13:11:33"
-        }
-    */
     public function makePayment(Request $request)
     {
         try {
             $isExist = EnrollmentPayment::where('enrollment_ref_no', $request->enrollment_ref_no)->exists();
-
-            // return response()->json(   $isExist, 200);
             if($isExist){
                 $enrolPayment = EnrollmentPayment::where('enrollment_ref_no', $request->enrollment_ref_no)->first();
                 $enrolPayment->student_name =  $request->student_name;
@@ -354,10 +333,6 @@ class EnrollmentController extends Controller
 
     public function inquiry($page = 0,$pageSize = 0,$searchField = 0)
     {
-            // $enrol = {"Enrollment":null,"NoOfRecords":0};
-
-            // $enrol= new stdClass();
-
             $enrol = (object) [
                 'Enrollment' => [],
                 'NoOfRecords' => 0
@@ -403,15 +378,50 @@ class EnrollmentController extends Controller
           } else {
             return response()->json([
               "message" => "ref_no not found"
-            ], 404);
+            ], 200);
           }
     }
+
+    public function paymentListForApproval($page = 0,$pageSize = 0,$searchField = 0)
+    {
+            $payment = (object) [
+                'EnrollmentPayment' => [],
+                'NoOfRecords' => 0
+            ];
+
+            if($searchField != ""){
+         
+                $paymentList = EnrollmentPayment::where('approval_status','=',0)
+                ->where(function($query) use ($searchField){
+                    $query->where('ref_no','=','%'.$searchField.'%')
+                   ->orWhere('student_name','=','%'.$searchField.'%');
+               })->get();
+                // ->where('ref_no','LIKE','%'.$searchField.'%')
+                // ->orWhere('student_name','LIKE','%'.$searchField.'%')->orderby('lastname')->skip($page)->take($pageSize)->get();
+
+                $countPayment = EnrollmentPayment::where('approval_status','=',0)
+                ->where(function($query) use ($searchField){
+                    $query->where('ref_no','=','%'.$searchField.'%')
+                   ->orWhere('student_name','=','%'.$searchField.'%');
+               })->count();
+
+                $payment->EnrollmentPayment = $paymentList;
+                $payment->NoOfRecords = $countPayment;
+                return response()->json($payment, 200);
+            }else{
+                $paymentList = EnrollmentPayment::where('approval_status','=',0)->skip($page)->take($pageSize)->orderby('ref_no')->get();
+
+                $countPayment = EnrollmentPayment::where('approval_status','=',0)->count();
+
+                $payment->EnrollmentPayment = $paymentList;
+                $payment->NoOfRecords = $countPayment;
+                return response()->json($payment, 200);
+            }
+    }
+
+
     public function paymentList($page = 0,$pageSize = 0,$searchField = 0)
     {
-            // $enrol = {"Enrollment":null,"NoOfRecords":0};
-
-            // $enrol= new stdClass();
-
             $payment = (object) [
                 'EnrollmentPayment' => [],
                 'NoOfRecords' => 0
@@ -438,7 +448,41 @@ class EnrollmentController extends Controller
                 $payment->NoOfRecords = $countPayment;
                 return response()->json($payment, 200);
             }
+    }
 
+    public function approvePayment($refNo){
+
+        try{
+            $isExist = EnrollmentPayment::where('enrollment_ref_no', $refNo)->exists();
+            if($isExist ){
+                $enrollmentPayment = EnrollmentPayment::where('enrollment_ref_no', $refNo)->where('approval_status',0)->first();
+                if($enrollmentPayment){
+                    $enrollmentPayment->approval_status = 1;
+                    $enrollmentPayment->save();
+
+
+                    $isExistEnrol = Enrollment::where('ref_no', $refNo)->where('status','<>','approved')->exists();
+                    if( $isExistEnrol){
+                        $enrollment = Enrollment::where('ref_no', $refNo)->where('status','<>','approved')->first();
+                        $enrollment->status = 'approved';
+                        $enrollment->save();
+                    }
+
+                    return response()->json($enrollmentPayment, 200);
+                }
+            }
+            return response()->json(null, 200);
+        } catch (Exception $e) {
+            return response()->json(null, 200);
+        }
+    }
+
+    public function disapprovePayment($refNo){
+
+        $enrollmentPayment = EnrollmentPayment::where('enrollment_ref_no', $refNo)->where('approval_status',0)->first();
+        $enrollmentPayment->approval_status = 2;
+        $enrollmentPayment->save();
+        return response()->json($enrollmentPayment, 200);
     }
 }
 

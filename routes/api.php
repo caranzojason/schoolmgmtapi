@@ -49,10 +49,6 @@ Route::get('/paymentEnrollmentgetByReff/{refNo}', 'App\Http\Controllers\Enrollme
 
 Route::get('/enrollmentinquiry/{page?}/{pageSize?}/{searchField?}', 'App\Http\Controllers\EnrollmentController@inquiry');
 
-Route::get('/forapprovalPayment/{page?}/{pageSize?}/{searchField?}', 'App\Http\Controllers\EnrollmentController@paymentList');
-
-Route::post('/enrollmentMakePayment','App\Http\Controllers\EnrollmentController@makePayment');
-
 Route::post('/enrollmentUpload','App\Http\Controllers\EnrollmentController@uploadFile');
 
 Route::post('/enrol','App\Http\Controllers\EnrollmentController@enrol');
@@ -67,7 +63,17 @@ Route::get('/enrollmentretrievefile','App\Http\Controllers\EnrollmentController@
 
 Route::get('/enrollmentgetPayment/{refNo}','App\Http\Controllers\EnrollmentController@getPayment');
 
-//getPayment
+
+//payment here
+Route::get('/forapprovalPayment/{page?}/{pageSize?}/{searchField?}', 'App\Http\Controllers\EnrollmentController@paymentListForApproval');
+
+Route::get('/inquiryPayment/{page?}/{pageSize?}/{searchField?}', 'App\Http\Controllers\EnrollmentController@paymentList');
+
+Route::get('/approvePayment/{refNo}', 'App\Http\Controllers\EnrollmentController@approvePayment');
+
+Route::get('/disapprovePayment/{refNo}', 'App\Http\Controllers\EnrollmentController@disapprovePayment');
+
+Route::post('/enrollmentMakePayment','App\Http\Controllers\EnrollmentController@makePayment');
 
 //users here
 Route::post('/login','App\Http\Controllers\UserController@login');
