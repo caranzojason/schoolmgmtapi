@@ -41,6 +41,7 @@ class EnrollmentController extends Controller
             ], 200);
           }
     }
+ 
 
     public function getEnrolByEnrlNo($enrolNo)
     {
@@ -388,6 +389,54 @@ class EnrollmentController extends Controller
                 $enrol->Enrollment = $enrollment;
                 $enrol->NoOfRecords = $countEnrol;
                 return response()->json($enrol, 200);
+            }
+
+    }
+
+    //SJCC-ENR-00222
+    public function getPaymentByEnrolRefNo($refNo)
+    {
+        // return response()->json($refNo);
+        if (EnrollmentPayment::where('enrollment_ref_no', $refNo)->exists()) {
+            $paymentList = EnrollmentPayment::where('enrollment_ref_no', $refNo)->first();
+            return response()->json($paymentList, 200);
+          } else {
+            return response()->json([
+              "message" => "ref_no not found"
+            ], 404);
+          }
+    }
+    public function paymentList($page = 0,$pageSize = 0,$searchField = 0)
+    {
+            // $enrol = {"Enrollment":null,"NoOfRecords":0};
+
+            // $enrol= new stdClass();
+
+            $payment = (object) [
+                'EnrollmentPayment' => [],
+                'NoOfRecords' => 0
+            ];
+
+            if($searchField != ""){
+         
+                $paymentList = EnrollmentPayment::where('ref_no','LIKE','%'.$searchField.'%')
+                ->orWhere('student_name','LIKE','%'.$searchField.'%')->orderby('lastname')->skip($page)->take($pageSize)->get();
+
+                $paymentList = EnrollmentPayment::where('ref_no','LIKE','%'.$searchField.'%')
+                ->orWhere('student_name','LIKE','%'.$searchField.'%')->orderby('lastname')->count();
+
+                $payment->EnrollmentPayment = $paymentList;
+                $payment->NoOfRecords = $countPayment;
+                return response()->json($enrol, 200);
+            }else{
+                $paymentList = EnrollmentPayment::skip($page)->take($pageSize)->orderby('ref_no')->get();
+
+                $countPayment = EnrollmentPayment::where('ref_no','LIKE','%'.$searchField.'%')
+                ->orWhere('student_name','LIKE','%'.$searchField.'%')->orderby('lastname')->count();
+
+                $payment->EnrollmentPayment = $paymentList;
+                $payment->NoOfRecords = $countPayment;
+                return response()->json($payment, 200);
             }
 
     }

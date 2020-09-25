@@ -45,7 +45,11 @@ Route::get('/enrollmentgetByEnrolNo/{enrolNo}', 'App\Http\Controllers\Enrollment
 
 Route::get('/enrollmentgetByReff/{refNo}', 'App\Http\Controllers\EnrollmentController@getByEnrolRefNo');
 
+Route::get('/paymentEnrollmentgetByReff/{refNo}', 'App\Http\Controllers\EnrollmentController@getPaymentByEnrolRefNo');
+
 Route::get('/enrollmentinquiry/{page?}/{pageSize?}/{searchField?}', 'App\Http\Controllers\EnrollmentController@inquiry');
+
+Route::get('/forapprovalPayment/{page?}/{pageSize?}/{searchField?}', 'App\Http\Controllers\EnrollmentController@paymentList');
 
 Route::post('/enrollmentMakePayment','App\Http\Controllers\EnrollmentController@makePayment');
 
