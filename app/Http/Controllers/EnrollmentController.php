@@ -129,6 +129,9 @@ class EnrollmentController extends Controller
             $enroll->remarks =  $request->remarks;
             $enroll->created_at =  $request->created_at;
             $enroll->school_year =  $request->school_year;
+            $enroll->schoolyearfrom =  $request->schoolyearfrom;
+            $enroll->schoolyearto =  $request->schoolyearto;
+            $enroll->semester =  $request->semester;
             $enroll->save();
 
             $resp->ref_no = $enroll->ref_no;
@@ -241,7 +244,7 @@ class EnrollmentController extends Controller
             $enroll->last_school_year =  $request->last_school_year;
             $enroll->indigenous =  $request->indigenous;
             $enroll->learning_modality =  $request->learning_modality;
-            $enroll->status =  "verified";//Verify
+            $enroll->status =  "ForPayment";//Verify
             $enroll->validated_by =  $request->validated_by;
             $enroll->approved_by =  $request->approved_by;
             $enroll->cancelled_by =  $request->cancelled_by;
@@ -256,6 +259,66 @@ class EnrollmentController extends Controller
             throw new HttpException(200, $e->getMessage());
         }
     }
+
+    public function updateInquiry(Request $request)
+    {
+        try {
+
+            $enroll = Enrollment::find( $request->id);
+            $enroll->id = $request->id;
+            $enroll->ref_no =$request->ref_no;
+            $enroll->type =  $request->type;
+            $enroll->studentno =  $request->studentno;
+            $enroll->firstname =  $request->firstname;
+            $enroll->middlename =  $request->middlename;
+            $enroll->lastname =  $request->lastname;
+            $enroll->email =  $request->email;
+            $enroll->grade =  $request->grade;
+            $enroll->department =  $request->department;
+            $enroll->strand =  $request->strand;
+            $strDate = $request->dob['year'] . "/" . $request->dob['month'] .'/'. $request->dob['day'];
+            $enroll->dob =  $strDate;
+            $enroll->place_of_birth =  $request->place_of_birth;
+            $enroll->contactno =  $request->contactno;
+            $enroll->address =  $request->address;
+            $enroll->nationality =  $request->nationality;
+            $enroll->age =  $request->age;
+            $enroll->gender =  $request->gender;
+            $enroll->religion =  $request->religion;
+            $enroll->fathername =  $request->fathername;
+            $enroll->fatherocc =  $request->fatherocc;
+            $enroll->fathercontact =  $request->fathercontact;
+            $enroll->fatherplace =  $request->fatherplace;
+            $enroll->mothername =  $request->mothername;
+            $enroll->motherocc =  $request->motherocc;
+            $enroll->mothercontact =  $request->mothercontact;
+            $enroll->motherplace =  $request->motherplace;
+            $enroll->guardian_name =  $request->guardian_name;
+            $enroll->guardian_contactno =  $request->guardian_contactno;
+            $enroll->guardian_relation =  $request->guardian_relation;
+            $enroll->last_school_attended =  $request->last_school_attended;
+            $enroll->last_school_grade_level =  $request->last_school_grade_level;
+            $enroll->last_school_date_of_attendance =  null;// $request->last_school_date_of_attendance;
+            $enroll->last_school_address =  $request->last_school_address;
+            $enroll->last_school_year =  $request->last_school_year;
+            $enroll->indigenous =  $request->indigenous;
+            $enroll->learning_modality =  $request->learning_modality;
+            $enroll->status = $request->status;
+            $enroll->validated_by =  $request->validated_by;
+            $enroll->approved_by =  $request->approved_by;
+            $enroll->cancelled_by =  $request->cancelled_by;
+            $enroll->updated_by =  $request->updated_by;
+            $enroll->remarks =  $request->remarks;
+            $enroll->created_at =  $request->created_at;
+            $enroll->school_year =  $request->school_year;
+        
+           $enroll->save();
+            return response()->json($request, 200);
+        } catch (Exception $e) {
+            throw new HttpException(200, $e->getMessage());
+        }
+    }
+
     public function makePayment(Request $request)
     {
         try {
@@ -269,8 +332,17 @@ class EnrollmentController extends Controller
                 $enrolPayment->description =  $request->description;
                 $enrolPayment->approval_remarks =  $request->approval_remarks;
                 $enrolPayment->approval_status =  $request->approval_status;
+                $enrolPayment->status = "ForApproval";
                 $enrolPayment->created_at =  $request->created_at;
                 $enrolPayment->save();
+
+                $isExistEnrol = Enrollment::where('ref_no', $request->enrollment_ref_no)->where('status','<>','approved')->exists();
+                if( $isExistEnrol){
+                    $enrollment = Enrollment::where('ref_no', $request->enrollment_ref_no)->where('status','<>','approved')->first();
+                    $enrollment->status = 'PaymentForApproval';
+                    $enrollment->save();
+                }
+
                 return response()->json([
                     "message" => "payment created"
                 ], 200);
@@ -283,6 +355,7 @@ class EnrollmentController extends Controller
                 $enrolPayment->description =  $request->description;
                 $enrolPayment->approval_remarks =  $request->approval_remarks;
                 $enrolPayment->approval_status =  $request->approval_status;
+                $enrolPayment->status = "ForApproval";
                 $enrolPayment->created_at =  $request->created_at;
                 $enrolPayment->save();
                 return response()->json([
@@ -331,7 +404,7 @@ class EnrollmentController extends Controller
           }
     }
 
-    public function inquiry($page = 0,$pageSize = 0,$searchField = 0)
+    public function inquiry($page = 0,$pageSize = 0,$searchField = "")
     {
             $enrol = (object) [
                 'Enrollment' => [],
@@ -382,7 +455,7 @@ class EnrollmentController extends Controller
           }
     }
 
-    public function paymentListForApproval($page = 0,$pageSize = 0,$searchField = 0)
+    public function paymentListForApproval($page = 0,$pageSize = 0,$searchField="")
     {
             $payment = (object) [
                 'EnrollmentPayment' => [],
@@ -391,18 +464,18 @@ class EnrollmentController extends Controller
 
             if($searchField != ""){
          
-                $paymentList = EnrollmentPayment::where('approval_status','=',0)
-                ->where(function($query) use ($searchField){
-                    $query->where('ref_no','=','%'.$searchField.'%')
-                   ->orWhere('student_name','=','%'.$searchField.'%');
-               })->get();
+                $paymentList = EnrollmentPayment::where('status','=','ForApproval')
+                ->where(function($query) use ($searchField,$page,$pageSize){
+                    $query->where('enrollment_ref_no','LIKE','%'.$searchField.'%')
+                   ->orWhere('student_name','LIKE','%'.$searchField.'%');
+               })->skip($page)->take($pageSize)->orderby('ref_no')->get();
                 // ->where('ref_no','LIKE','%'.$searchField.'%')
                 // ->orWhere('student_name','LIKE','%'.$searchField.'%')->orderby('lastname')->skip($page)->take($pageSize)->get();
 
-                $countPayment = EnrollmentPayment::where('approval_status','=',0)
+                $countPayment = EnrollmentPayment::where('status','=','ForApproval')
                 ->where(function($query) use ($searchField){
-                    $query->where('ref_no','=','%'.$searchField.'%')
-                   ->orWhere('student_name','=','%'.$searchField.'%');
+                    $query->where('enrollment_ref_no','LIKE','%'.$searchField.'%')
+                   ->orWhere('student_name','LIKE','%'.$searchField.'%');
                })->count();
 
                 $payment->EnrollmentPayment = $paymentList;
@@ -420,7 +493,7 @@ class EnrollmentController extends Controller
     }
 
 
-    public function paymentList($page = 0,$pageSize = 0,$searchField = 0)
+    public function paymentList($page = 0,$pageSize = 0,$searchField="")
     {
             $payment = (object) [
                 'EnrollmentPayment' => [],
@@ -429,20 +502,19 @@ class EnrollmentController extends Controller
 
             if($searchField != ""){
          
-                $paymentList = EnrollmentPayment::where('ref_no','LIKE','%'.$searchField.'%')
-                ->orWhere('student_name','LIKE','%'.$searchField.'%')->orderby('lastname')->skip($page)->take($pageSize)->get();
+                $paymentList = EnrollmentPayment::where('enrollment_ref_no','LIKE','%'.$searchField.'%')
+                ->orWhere('student_name','LIKE','%'.$searchField.'%')->orderby('ref_no')->skip($page)->take($pageSize)->get();
 
-                $paymentList = EnrollmentPayment::where('ref_no','LIKE','%'.$searchField.'%')
-                ->orWhere('student_name','LIKE','%'.$searchField.'%')->orderby('lastname')->count();
+                $countPayment = EnrollmentPayment::where('enrollment_ref_no','LIKE','%'.$searchField.'%')
+                ->orWhere('student_name','LIKE','%'.$searchField.'%')->orderby('ref_no')->count();
 
                 $payment->EnrollmentPayment = $paymentList;
                 $payment->NoOfRecords = $countPayment;
-                return response()->json($enrol, 200);
+                return response()->json($payment, 200);
             }else{
                 $paymentList = EnrollmentPayment::skip($page)->take($pageSize)->orderby('ref_no')->get();
 
-                $countPayment = EnrollmentPayment::where('ref_no','LIKE','%'.$searchField.'%')
-                ->orWhere('student_name','LIKE','%'.$searchField.'%')->orderby('lastname')->count();
+                $countPayment = EnrollmentPayment::skip($page)->take($pageSize)->orderby('ref_no')->count();
 
                 $payment->EnrollmentPayment = $paymentList;
                 $payment->NoOfRecords = $countPayment;
@@ -458,6 +530,7 @@ class EnrollmentController extends Controller
                 $enrollmentPayment = EnrollmentPayment::where('enrollment_ref_no', $refNo)->where('approval_status',0)->first();
                 if($enrollmentPayment){
                     $enrollmentPayment->approval_status = 1;
+                    $enrollmentPayment->status = "approved";
                     $enrollmentPayment->save();
 
 
@@ -481,6 +554,7 @@ class EnrollmentController extends Controller
 
         $enrollmentPayment = EnrollmentPayment::where('enrollment_ref_no', $refNo)->where('approval_status',0)->first();
         $enrollmentPayment->approval_status = 2;
+        $enrollmentPayment->status = "disapproved";
         $enrollmentPayment->save();
         return response()->json($enrollmentPayment, 200);
     }

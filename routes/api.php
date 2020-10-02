@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -57,6 +58,8 @@ Route::post('/updateEnrol','App\Http\Controllers\EnrollmentController@updateEnro
 
 Route::post('/enrolVerify','App\Http\Controllers\EnrollmentController@enrolVerify');
 
+Route::post('/updateInquiry','App\Http\Controllers\EnrollmentController@updateInquiry');
+
 Route::get('/enrollgetForverification','App\Http\Controllers\EnrollmentController@getForverification');
 
 Route::get('/enrollmentretrievefile','App\Http\Controllers\EnrollmentController@retrieveFile');
@@ -78,3 +81,6 @@ Route::post('/enrollmentMakePayment','App\Http\Controllers\EnrollmentController@
 //users here
 Route::post('/login','App\Http\Controllers\UserController@login');
 
+//billing here
+
+Route::get('/getBillingAllFee', 'App\Http\Controllers\BillingController@getAllFee');

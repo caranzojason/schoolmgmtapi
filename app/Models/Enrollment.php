@@ -103,7 +103,10 @@ class Enrollment extends Model
     'updated_by',
     'remarks',
     'created_at',
-    'school_year'];
+    'school_year',
+    'schoolyearfrom',
+    'schoolyearto',
+    'semester'];
     public $timestamps = false;
 }
 

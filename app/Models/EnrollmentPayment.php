@@ -22,7 +22,9 @@ class EnrollmentPayment extends Model
     'approval_status',
     'approval_by',
     'approval_date',
-    'created_at'];
+    'created_at',
+    'status'
+];
     
     public $timestamps = false;
 }
