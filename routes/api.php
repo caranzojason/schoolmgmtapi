@@ -81,6 +81,18 @@ Route::post('/enrollmentMakePayment','App\Http\Controllers\EnrollmentController@
 //users here
 Route::post('/login','App\Http\Controllers\UserController@login');
 
-//billing here
+//Student here
+Route::post('/createStudent','App\Http\Controllers\StudentController@createStudent');
+Route::get('/studentlist/{page?}/{pageSize?}/{searchField?}', 'App\Http\Controllers\StudentController@studentlist');
 
+//billing here
 Route::get('/getBillingAllFee', 'App\Http\Controllers\BillingController@getAllFee');
+Route::get('/getYearlyFeeAccordingtoStudent/{departmentId?}/{gradeId?}/{strandId?}/{semester?}/{schoolyearfrom?}/{schoolyearto?}', 'App\Http\Controllers\BillingController@getYearlyFeeAccordingtoStudent');
+Route::post('/saveYearlyFee','App\Http\Controllers\YearlyFeeController@saveYearlyFee');
+Route::post('/saveYearlyFeeDetail','App\Http\Controllers\YearlyFeeController@saveYearlyFeeDetail');
+
+//schoolyear
+Route::get('/getActiveSchoolYear', 'App\Http\Controllers\SchoolYearController@getActiveSchoolYear');
+
+
+

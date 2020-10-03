@@ -28,7 +28,6 @@ class EnrollmentController extends Controller
         return response()->json($enrollment, 200);
     }
 
-    //http://127.0.0.1:8000/api/enrollmentgetByReff/SJCC-ENR-00001
     public function getByEnrolRefNo($refNo)
     {
         if (Enrollment::where('ref_no', $refNo)->exists()) {
