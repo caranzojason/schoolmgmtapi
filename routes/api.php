@@ -94,5 +94,10 @@ Route::post('/saveYearlyFeeDetail','App\Http\Controllers\YearlyFeeController@sav
 //schoolyear
 Route::get('/getActiveSchoolYear', 'App\Http\Controllers\SchoolYearController@getActiveSchoolYear');
 
+//student fee
+Route::post('/saveStudentFee','App\Http\Controllers\StudentFeeController@saveStudentFee');
+Route::post('/saveStudentFeeDetail','App\Http\Controllers\StudentFeeController@saveStudentFeeDetail');
+
+
 
 
