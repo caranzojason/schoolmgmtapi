@@ -90,6 +90,8 @@ Route::get('/getBillingAllFee', 'App\Http\Controllers\BillingController@getAllFe
 Route::get('/getYearlyFeeAccordingtoStudent/{departmentId?}/{gradeId?}/{strandId?}/{semester?}/{schoolyearfrom?}/{schoolyearto?}', 'App\Http\Controllers\BillingController@getYearlyFeeAccordingtoStudent');
 Route::post('/saveYearlyFee','App\Http\Controllers\YearlyFeeController@saveYearlyFee');
 Route::post('/saveYearlyFeeDetail','App\Http\Controllers\YearlyFeeController@saveYearlyFeeDetail');
+Route::get('/generateBill/{yearFrom?}/{yearTo?}', 'App\Http\Controllers\BillingController@generateBill');
+Route::get('/generatePdf', 'App\Http\Controllers\BillingController@generatePdf');
 
 //schoolyear
 Route::get('/getActiveSchoolYear', 'App\Http\Controllers\SchoolYearController@getActiveSchoolYear');
@@ -97,6 +99,8 @@ Route::get('/getActiveSchoolYear', 'App\Http\Controllers\SchoolYearController@ge
 //student fee
 Route::post('/saveStudentFee','App\Http\Controllers\StudentFeeController@saveStudentFee');
 Route::post('/saveStudentFeeDetail','App\Http\Controllers\StudentFeeController@saveStudentFeeDetail');
+Route::get('/getIndividualStudentFee/{studentId?}/{yearFrom?}/{yearTo?}', 'App\Http\Controllers\StudentFeeController@getIndividualStudentFee');
+
 
 
 

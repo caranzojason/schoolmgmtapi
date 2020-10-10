@@ -40,5 +40,16 @@ class StudentFeeController extends Controller
             ], 201);
     }
 
-    
+    public function getIndividualStudentFee($studentId,$yearFrom,$yearTo)
+    {
+        if (StudentFee::where('studentId', $studentId)->exists()) {
+            $studentFee = StudentFee::where('studentId', $studentId)->where('schoolyearfrom',$yearFrom)->where('schoolyearto',$yearTo)->first();
+
+            $studentFeeDetail = StudentFeeDetail::where('studentFeeId', $studentFee["id"])->get();
+            return response()->json($studentFeeDetail, 200);
+          } else {
+            return response()->json($studentId
+            , 404);
+          }
+    }
 }
