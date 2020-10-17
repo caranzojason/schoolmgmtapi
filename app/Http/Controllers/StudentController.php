@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Student;
+use DB;
 
 class StudentController extends Controller
 {
@@ -88,6 +89,41 @@ class StudentController extends Controller
                 $stud->NoOfRecords = $countStudent;
                 return response()->json($stud, 200);
             }
-
     }
+
+    public function studentViewlist($page = 0,$pageSize = 0,$searchField = "")
+    {
+            $stud = (object) [
+                'Student' => [],
+                'NoOfRecords' => 0
+            ];
+
+            if($searchField != ""){
+         
+                $student= DB::table("VStudent")->where('lastname','LIKE','%'.$searchField.'%')
+                ->orWhere('firstname','LIKE','%'.$searchField.'%')
+                ->orWhere('email','LIKE','%'.$searchField.'%')->orderby('lastname')->skip($page)->take($pageSize)->get();
+
+                $countStudent = DB::table("VStudent")->where('ref_no','LIKE','%'.$searchField.'%')
+                ->Where('lastname','LIKE','%'.$searchField.'%')
+                ->orWhere('firstname','LIKE','%'.$searchField.'%')
+                ->orWhere('email','LIKE','%'.$searchField.'%')->orderby('lastname')->count();
+
+                $stud->Student = $student;
+                $stud->NoOfRecords = $countStudent;
+                return response()->json($stud, 200);
+            }else{
+                $student = DB::table("VStudent")->skip($page)->take($pageSize)->orderby('lastname')->get();
+
+                $countStudent = DB::table("VStudent")->where('lastname','LIKE','%'.$searchField.'%')
+                ->orWhere('firstname','LIKE','%'.$searchField.'%')
+                ->orWhere('email','LIKE','%'.$searchField.'%')->orderby('lastname')->count();
+
+                $stud->Student = $student;
+                $stud->NoOfRecords = $countStudent;
+                return response()->json($stud, 200);
+            }
+    }
+
+    
 }

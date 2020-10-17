@@ -84,24 +84,37 @@ Route::post('/login','App\Http\Controllers\UserController@login');
 //Student here
 Route::post('/createStudent','App\Http\Controllers\StudentController@createStudent');
 Route::get('/studentlist/{page?}/{pageSize?}/{searchField?}', 'App\Http\Controllers\StudentController@studentlist');
+Route::get('/studentViewlist/{page?}/{pageSize?}/{searchField?}', 'App\Http\Controllers\StudentController@studentViewlist');
 
 //billing here
 Route::get('/getBillingAllFee', 'App\Http\Controllers\BillingController@getAllFee');
 Route::get('/getYearlyFeeAccordingtoStudent/{departmentId?}/{gradeId?}/{strandId?}/{semester?}/{schoolyearfrom?}/{schoolyearto?}', 'App\Http\Controllers\BillingController@getYearlyFeeAccordingtoStudent');
+Route::get('/getYearlyFeeById/{id?}', 'App\Http\Controllers\YearlyFeeController@getYearlyFeeById');
+Route::get('/getYearlyFeeDetailByMastereId/{masterId?}', 'App\Http\Controllers\YearlyFeeController@getYearlyFeeDetailByMastereId');
 Route::post('/saveYearlyFee','App\Http\Controllers\YearlyFeeController@saveYearlyFee');
+Route::post('/updateYearlyFee','App\Http\Controllers\YearlyFeeController@updateYearlyFee');
 Route::post('/saveYearlyFeeDetail','App\Http\Controllers\YearlyFeeController@saveYearlyFeeDetail');
+Route::post('/updateYearlyFeeDetail','App\Http\Controllers\YearlyFeeController@updateYearlyFeeDetail');
+Route::get('/yearlyfee/{schoolYearFrom?}/{schoolYearTo?}/{page?}/{pageSize?}/{searchField?}', 'App\Http\Controllers\YearlyFeeController@yearlyfee');
 Route::get('/generateBill/{yearFrom?}/{yearTo?}', 'App\Http\Controllers\BillingController@generateBill');
 Route::get('/generatePdf', 'App\Http\Controllers\BillingController@generatePdf');
 
+/*
+getStudentFeeById
+getStudentFeeDetailByMastereId
+*/
 //schoolyear
 Route::get('/getActiveSchoolYear', 'App\Http\Controllers\SchoolYearController@getActiveSchoolYear');
 
 //student fee
 Route::post('/saveStudentFee','App\Http\Controllers\StudentFeeController@saveStudentFee');
+Route::post('/updateStudentFee','App\Http\Controllers\StudentFeeController@updateStudentFee');
 Route::post('/saveStudentFeeDetail','App\Http\Controllers\StudentFeeController@saveStudentFeeDetail');
+Route::post('/updateStudentFeeDetail','App\Http\Controllers\StudentFeeController@updateStudentFeeDetail');
 Route::get('/getIndividualStudentFee/{studentId?}/{yearFrom?}/{yearTo?}', 'App\Http\Controllers\StudentFeeController@getIndividualStudentFee');
-
-
+Route::get('/getIndividualListStudentFee/{schoolYearFrom?}/{schoolYearTo?}/{page?}/{pageSize?}/{searchField?}', 'App\Http\Controllers\StudentFeeController@getIndividualListStudentFee');
+Route::get('/getStudentFeeById/{id?}', 'App\Http\Controllers\StudentFeeController@getStudentFeeById');
+Route::get('/getStudentFeeDetailByMastereId/{masterId?}', 'App\Http\Controllers\StudentFeeController@getStudentFeeDetailByMastereId');
 
 
 
