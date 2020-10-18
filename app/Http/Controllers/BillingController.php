@@ -11,6 +11,8 @@ use App\Models\StudentFeeDetail;
 use App\Models\BillingMaster;
 use App\Models\BillingDetail;
 use DB;
+use App\Jobs\GenerateBill;
+use Illuminate\Support\Facades\Log;
 
 class BillingController extends Controller
 {
@@ -37,41 +39,46 @@ class BillingController extends Controller
 
     public function generateBill($yearFrom,$yearTo)
     {
-        $studentFee = StudentFee::where('status', 'O')->where('schoolyearfrom',$yearFrom)->where('schoolyearto',$yearTo)->get();
 
-        DB::beginTransaction();
-        try {
-            foreach($studentFee as $studFee){
-                $studentFeeDetail = StudentFeeDetail::where('studentFeeId', $studFee["id"])->get();
-                $bill = new BillingMaster();
-                $bill->studentId = $studFee["studentId"];
-                $bill->schoolyearfrom = $yearFrom;
-                $bill->schoolyearto = $yearTo;
-                $bill->status = "O";
-                $bill->save();   
+        Log::info("Request Cycle with Queues Begins");
+        GenerateBill::dispatch($yearFrom,$yearTo);
+        // $this->dispatch(new GenerateBill($yearFrom,$yearTo));
+        Log::info("Request Cycle with Queues Ends");
+        // $studentFee = StudentFee::where('status', 'O')->where('schoolyearfrom',$yearFrom)->where('schoolyearto',$yearTo)->get();
 
-                for($detailNo=1;$detailNo<=10;$detailNo++){
-                    foreach($studentFeeDetail as $studDetail){
-                        $billDetail = new BillingDetail();
-                        $billDetail->billmasterId = $bill->id;
-                        $billDetail->detailNo = $detailNo;
-                        $billDetail->amount = $studDetail['amount'] / 10;
-                        $billDetail->feeType = $studDetail['feeType'];
-                        $billDetail->save();
-                    }
-                }
+        // DB::beginTransaction();
+        // try {
+        //     foreach($studentFee as $studFee){
+        //         $studentFeeDetail = StudentFeeDetail::where('studentFeeId', $studFee["id"])->get();
+        //         $bill = new BillingMaster();
+        //         $bill->studentId = $studFee["studentId"];
+        //         $bill->schoolyearfrom = $yearFrom;
+        //         $bill->schoolyearto = $yearTo;
+        //         $bill->status = "O";
+        //         $bill->save();   
 
-                $studFee->status = "C";
-                $studFee->save();
-                DB::commit();
-                return response()->json($bill);
+        //         for($detailNo=1;$detailNo<=10;$detailNo++){
+        //             foreach($studentFeeDetail as $studDetail){
+        //                 $billDetail = new BillingDetail();
+        //                 $billDetail->billmasterId = $bill->id;
+        //                 $billDetail->detailNo = $detailNo;
+        //                 $billDetail->amount = $studDetail['amount'] / 10;
+        //                 $billDetail->feeType = $studDetail['feeType'];
+        //                 $billDetail->save();
+        //             }
+        //         }
+
+        //         $studFee->status = "C";
+        //         $studFee->save();
+        //         DB::commit();
+        //         return response()->json($bill);
         
-            }
+        //     }
        
-        } catch (\Exception $ex) {
-            DB::rollback();
-            return response()->json(['error' => $ex->getMessage()], 500);
-        }
+        // } catch (\Exception $ex) {
+        //     DB::rollback();
+        //     return response()->json(['error' => $ex->getMessage()], 500);
+        // }
     }
 
     public function generatePdf()
