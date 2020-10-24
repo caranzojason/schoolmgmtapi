@@ -98,6 +98,10 @@ Route::post('/updateYearlyFeeDetail','App\Http\Controllers\YearlyFeeController@u
 Route::get('/yearlyfee/{schoolYearFrom?}/{schoolYearTo?}/{page?}/{pageSize?}/{searchField?}', 'App\Http\Controllers\YearlyFeeController@yearlyfee');
 Route::get('/generateBill/{yearFrom?}/{yearTo?}', 'App\Http\Controllers\BillingController@generateBill');
 Route::get('/generatePdf', 'App\Http\Controllers\BillingController@generatePdf');
+Route::get('/getStudentForPayment/{studentId?}/{schoolyearfrom?}/{schoolyearto?}', 'App\Http\Controllers\BillingController@getStudentForPayment');
+Route::get('/getStudentForPaymentByBillId/{billid?}/{detailNo?}', 'App\Http\Controllers\BillingController@getStudentForPaymentByBillId');
+Route::get('/getStudentPaidPayment/{studentId?}/{schoolyearfrom?}/{schoolyearto?}', 'App\Http\Controllers\BillingController@getStudentPaidPayment');
+
 
 /*
 getStudentFeeById
@@ -118,3 +122,5 @@ Route::get('/getStudentFeeDetailByMastereId/{masterId?}', 'App\Http\Controllers\
 
 
 
+//transaction
+Route::post('/saveTransaction','App\Http\Controllers\TransactionController@saveTransaction');
