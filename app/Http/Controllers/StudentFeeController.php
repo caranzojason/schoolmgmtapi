@@ -43,8 +43,6 @@ class StudentFeeController extends Controller
 
     public function saveStudentFeeDetail(Request $request)
     {
-   
-
       foreach($request->all() as $key => $value){
           $studFee = new StudentFeeDetail();
           $studFee->description =  $value['description'];

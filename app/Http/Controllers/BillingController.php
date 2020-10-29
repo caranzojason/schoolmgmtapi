@@ -13,7 +13,6 @@ use App\Models\Transaction;
 use DB;
 use App\Jobs\GenerateBill;
 
-
 use Illuminate\Support\Facades\Log;
 
 class BillingController extends Controller
@@ -23,7 +22,6 @@ class BillingController extends Controller
         $classes = Fee::all();
         return response()->json($classes);
     }
-
 
     public function getYearlyFeeAccordingtoStudent($departmentId=0,$gradeId=0,$strandId=0,$semester=0,$schoolyearfrom=0,$schoolyearto=0)
     {
@@ -37,7 +35,6 @@ class BillingController extends Controller
 
     public function generateBill($yearFrom,$yearTo)
     {
-
         Log::info("Request Cycle with Queues Begins");
         GenerateBill::dispatch($yearFrom,$yearTo);
         Log::info("Request Cycle with Queues Ends");
@@ -64,24 +61,8 @@ class BillingController extends Controller
         $billmaster = BillingMaster::where('studentId', $studentId)
          ->where('schoolyearfrom',$yearFrom)->where('schoolyearto',$yearTo)->first();
 
-         $transactionDetail = Transaction::where('billMasterId', $billmaster->Id)->selectRaw('billDetailNo as detailNo,totalDetailAmountPaid as amount, billMasterId,amountchange')->get();
-
-        //  $transaction = (object) [
-        //     'yearlyFee' => [],
-        //     'NoOfRecords' => 0
-        // ];
-
-
-        //  $transDetailNos = $transactionDetail->pluck('billDetailNo');
-
-        //  $billDetail = BillingDetail::whereIn('detailNo',  $transDetailNos)->selectRaw('billMasterId,detailNo ,SUM(amount) as amount')
-        //   ->groupBy('billMasterId','detailNo')->get();
-         
-
+         $transactionDetail = Transaction::where('billMasterId', $billmaster->Id)->selectRaw('id,billDetailNo as detailNo,totalDetailAmountPaid as amount, billMasterId,amountchange')->get();
          return response()->json($transactionDetail);
-
-        //  $billDetail = BillingDetail::where('billMasterId', $billmaster->Id)->selectRaw('billMasterId,detailNo ,SUM(amount) as amount')
-        //  ->groupBy('billMasterId','detailNo')->get();
     }
 
     public function generatePdf()
@@ -90,4 +71,9 @@ class BillingController extends Controller
         return $pdf->download('invoice.pdf');
     }
 
+    public function getAssesmentbydetailNo($schoolYearFrom,$schoolYearTo,$detailNo)
+    {
+        $bill = DB::select('call sproc_billing(?,?,?)',[$schoolYearFrom,$schoolYearTo,$detailNo]);
+        return response()->json($bill);
+    }
 }

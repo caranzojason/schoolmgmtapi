@@ -37,11 +37,7 @@ class GenerateBill implements ShouldQueue
      */
     public function handle()
     {
-
-
         $studentFee = StudentFee::where('status', 'O')->where('schoolyearfrom',$this->yearFrom)->where('schoolyearto',$this->yearTo)->get();
-
-
         DB::beginTransaction();
         try {
             foreach($studentFee as $studFee){

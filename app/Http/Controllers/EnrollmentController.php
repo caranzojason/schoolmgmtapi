@@ -557,5 +557,21 @@ class EnrollmentController extends Controller
         $enrollmentPayment->save();
         return response()->json($enrollmentPayment, 200);
     }
+
+    public function getEnrolment(Request $request)
+    {
+        $enrolment = Enrollment::select('LastName','FirstName',)
+            ->where('schoolyearfrom',$request->schoolyearfrom)
+            ->where('schoolyearto',$request->schoolyearto)
+            ->whereIn('department',$request->department)
+            ->whereIn('grade',$request->grade)
+            ->whereIn('section',$request->section)
+            ->whereIn('courseId',$request->course)
+            ->whereIn('strandId',$request->strand)
+            ->whereIn('semester',$request->semester)
+            ->whereIn('gender',$request->gender)
+            ->get();
+        return response()->json($enrolment, 200);
+    }
 }
 

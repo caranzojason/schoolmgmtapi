@@ -41,30 +41,19 @@ Route::post('/students','App\Http\Controllers\StudentController@createStudent');
 
 //enrolment here
 Route::get('/enrollmentgetAll','App\Http\Controllers\EnrollmentController@getAll');
-
 Route::get('/enrollmentgetByEnrolNo/{enrolNo}', 'App\Http\Controllers\EnrollmentController@getEnrolByEnrlNo');
-
 Route::get('/enrollmentgetByReff/{refNo}', 'App\Http\Controllers\EnrollmentController@getByEnrolRefNo');
-
 Route::get('/paymentEnrollmentgetByReff/{refNo}', 'App\Http\Controllers\EnrollmentController@getPaymentByEnrolRefNo');
-
 Route::get('/enrollmentinquiry/{page?}/{pageSize?}/{searchField?}', 'App\Http\Controllers\EnrollmentController@inquiry');
-
 Route::post('/enrollmentUpload','App\Http\Controllers\EnrollmentController@uploadFile');
-
 Route::post('/enrol','App\Http\Controllers\EnrollmentController@enrol');
-
 Route::post('/updateEnrol','App\Http\Controllers\EnrollmentController@updateEnrol');
-
 Route::post('/enrolVerify','App\Http\Controllers\EnrollmentController@enrolVerify');
-
 Route::post('/updateInquiry','App\Http\Controllers\EnrollmentController@updateInquiry');
-
 Route::get('/enrollgetForverification','App\Http\Controllers\EnrollmentController@getForverification');
-
 Route::get('/enrollmentretrievefile','App\Http\Controllers\EnrollmentController@retrieveFile');
-
 Route::get('/enrollmentgetPayment/{refNo}','App\Http\Controllers\EnrollmentController@getPayment');
+Route::post('/getEnrolment','App\Http\Controllers\EnrollmentController@getEnrolment');
 
 
 //payment here
@@ -101,6 +90,8 @@ Route::get('/generatePdf', 'App\Http\Controllers\BillingController@generatePdf')
 Route::get('/getStudentForPayment/{studentId?}/{schoolyearfrom?}/{schoolyearto?}', 'App\Http\Controllers\BillingController@getStudentForPayment');
 Route::get('/getStudentForPaymentByBillId/{billid?}/{detailNo?}', 'App\Http\Controllers\BillingController@getStudentForPaymentByBillId');
 Route::get('/getStudentPaidPayment/{studentId?}/{schoolyearfrom?}/{schoolyearto?}', 'App\Http\Controllers\BillingController@getStudentPaidPayment');
+Route::get('/getAssesmentbydetailNo/{schoolYearFrom?}/{schoolYearTo?}/{detailNo}', 'App\Http\Controllers\BillingController@getAssesmentbydetailNo');
+
 
 
 /*
@@ -124,3 +115,7 @@ Route::get('/getStudentFeeDetailByMastereId/{masterId?}', 'App\Http\Controllers\
 
 //transaction
 Route::post('/saveTransaction','App\Http\Controllers\TransactionController@saveTransaction');
+Route::post('/updateTransaction','App\Http\Controllers\TransactionController@updateTransaction');
+
+
+
