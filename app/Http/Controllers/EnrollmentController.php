@@ -98,6 +98,7 @@ class EnrollmentController extends Controller
             $enroll->grade =  $request->grade;
             $enroll->department =  $request->department;
             $enroll->strand =  $request->strand;
+            $enroll->courseId =  $request->courseId;
             $strDate = $request->dob['year'] . "/" . $request->dob['month'] .'/'. $request->dob['day'];
             $enroll->dob =  $strDate;
             $enroll->place_of_birth =  $request->place_of_birth;
@@ -572,63 +573,86 @@ class EnrollmentController extends Controller
         $tempSemester = "";
         $tempGender = "";
 
-        if($request->department == ""){
-            $tempDepartment = implode(',', Department::get()->pluck('id')->toArray());
+        if(count($request->department) == 0){
+            $tempDepartment =  Department::get()->pluck('id')->toArray();// implode(',', Department::get()->pluck('id')->toArray());
         }else{
             $tempDepartment = $request->department;
         }
 
         if($request->grade == ""){
-            $tempGrade = implode(',', Grade::get()->pluck('id')->toArray());
+            $tempGrade = Grade::get()->pluck('id')->toArray();// implode(',', Grade::get()->pluck('id')->toArray());
         }else{
             $tempGrade = $request->grade;
         }
 
         if($request->course == ""){
-            $tempCourse = implode(',', Courses::get()->pluck('id')->toArray());
+            $tempCourse = Courses::get()->pluck('id')->toArray(); //implode(',', Courses::get()->pluck('id')->toArray());
         }else{
             $tempCourse = $request->course;
         }
 
         if($request->strand == ""){
-            $tempStrand = implode(',', Strand::get()->pluck('id')->toArray());
+            $tempStrand =  Strand::get()->pluck('id')->toArray();// implode(',', Strand::get()->pluck('id')->toArray());
         }else{
             $tempStrand = $request->strand;
         }
 
         if($request->semester == ""){
-            $tempSemester = "1,2";
+            $tempSemester = [1,2];
         }else{
             $tempSemester = $request->semester;
         }
 
         if($request->gender == ""){
-            $tempGender = "male,female";
+            $tempGender = ["male","female"];
         }else{
             $tempGender = $request->gender;
         }
 
         $enrol = DB::table("VEnrollment")->where('schoolyearfrom',$request->schoolyearfrom)
         ->where('schoolyearto',$request->schoolyearto)
-        ->when($request->department != "",function($query) use ($tempDepartment){
-            return $query->whereIn("VEnrollment.departmentid",explode(',',$tempDepartment));
+        ->when(count($request->department)>0,function($query) use ($tempDepartment){
+            return $query->whereIn("VEnrollment.departmentid",$tempDepartment);
         })
-        ->when($request->grade != "",function($query) use ($tempGrade){
-            return $query->whereIn("VEnrollment.gradeId",explode(',',$tempGrade));
+        ->when(count($request->grade)>0,function($query) use ($tempGrade){
+            return $query->whereIn("VEnrollment.gradeId",$tempGrade);
         })
-        ->when($request->course != "",function($query) use ($tempCourse){
-            return $query->whereIn("VEnrollment.courseId",explode(',',$tempCourse));
+        ->when(count($request->course)>0,function($query) use ($tempCourse){
+            return $query->whereIn("VEnrollment.courseId",$tempCourse);
         })
-        ->when($request->strand != "",function($query) use ($tempStrand){
-            return $query->whereIn("VEnrollment.strandId",explode(',',$tempStrand));
+        ->when(count($request->strand)>0,function($query) use ($tempStrand){
+            return $query->whereIn("VEnrollment.strandId",$tempStrand);
         })
-        ->when($request->semester != "",function($query) use ($tempSemester){
-            return $query->whereIn("VEnrollment.semester",explode(',',$tempSemester));
+        ->when(count($request->semester)>0,function($query) use ($tempSemester){
+            return $query->whereIn("VEnrollment.semester",$tempSemester);
         })
-        ->when($request->gender != "",function($query) use ($tempGender){
-            return $query->whereIn("VEnrollment.gender",explode(',',$tempGender));
+        ->when(count($request->gender)>0,function($query) use ($tempGender){
+            return $query->whereIn("VEnrollment.gender",$tempGender);
         })
         ->get();
+
+
+        // $enrol = DB::table("VEnrollment")->where('schoolyearfrom',$request->schoolyearfrom)
+        // ->where('schoolyearto',$request->schoolyearto)
+        // ->when($request->department != "",function($query) use ($tempDepartment){
+        //     return $query->whereIn("VEnrollment.departmentid",explode(',',$tempDepartment));
+        // })
+        // ->when($request->grade != "",function($query) use ($tempGrade){
+        //     return $query->whereIn("VEnrollment.gradeId",explode(',',$tempGrade));
+        // })
+        // ->when($request->course != "",function($query) use ($tempCourse){
+        //     return $query->whereIn("VEnrollment.courseId",explode(',',$tempCourse));
+        // })
+        // ->when($request->strand != "",function($query) use ($tempStrand){
+        //     return $query->whereIn("VEnrollment.strandId",explode(',',$tempStrand));
+        // })
+        // ->when($request->semester != "",function($query) use ($tempSemester){
+        //     return $query->whereIn("VEnrollment.semester",explode(',',$tempSemester));
+        // })
+        // ->when($request->gender != "",function($query) use ($tempGender){
+        //     return $query->whereIn("VEnrollment.gender",explode(',',$tempGender));
+        // })
+        // ->get();
         return response()->json($enrol, 200);
     }
 }

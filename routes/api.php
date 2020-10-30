@@ -118,4 +118,7 @@ Route::post('/saveTransaction','App\Http\Controllers\TransactionController@saveT
 Route::post('/updateTransaction','App\Http\Controllers\TransactionController@updateTransaction');
 
 
+Route::get('/getfeetype', 'App\Http\Controllers\FeeController@getAll');
+
+
 

@@ -21,6 +21,7 @@ class Enrollment extends Model
     'grade',
     'department',
     'strand',
+    'courseId',
     'dob',
     'place_of_birth',
     'contactno',

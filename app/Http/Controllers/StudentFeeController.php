@@ -48,6 +48,7 @@ class StudentFeeController extends Controller
           $studFee->description =  $value['description'];
           $studFee->amount =  $value['amount'];
           $studFee->studentFeeId =  $value['studentFeeId'];
+          $studFee->feeType =  $value['feeType'];
           $studFee->save();
       }
       return response()->json(["OK"
