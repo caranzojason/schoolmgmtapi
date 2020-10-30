@@ -7,6 +7,11 @@ use Illuminate\Http\UploadRequest;
 use App\Models\Enrollment;
 use App\Models\EnrollmentPayment;
 use App\Models\Users;
+use App\Models\Department;
+use App\Models\Grade;
+use App\Models\Courses;
+use App\Models\Strand;
+use DB;
 
 class EnrollmentController extends Controller
 {
@@ -560,18 +565,71 @@ class EnrollmentController extends Controller
 
     public function getEnrolment(Request $request)
     {
-        $enrolment = Enrollment::select('LastName','FirstName',)
-            ->where('schoolyearfrom',$request->schoolyearfrom)
-            ->where('schoolyearto',$request->schoolyearto)
-            ->whereIn('department',$request->department)
-            ->whereIn('grade',$request->grade)
-            ->whereIn('section',$request->section)
-            ->whereIn('courseId',$request->course)
-            ->whereIn('strandId',$request->strand)
-            ->whereIn('semester',$request->semester)
-            ->whereIn('gender',$request->gender)
-            ->get();
-        return response()->json($enrolment, 200);
+        $tempDepartment = "";
+        $tempGrade = "";
+        $tempCourse = "";
+        $tempStrand = "";
+        $tempSemester = "";
+        $tempGender = "";
+
+        if($request->department == ""){
+            $tempDepartment = implode(',', Department::get()->pluck('id')->toArray());
+        }else{
+            $tempDepartment = $request->department;
+        }
+
+        if($request->grade == ""){
+            $tempGrade = implode(',', Grade::get()->pluck('id')->toArray());
+        }else{
+            $tempGrade = $request->grade;
+        }
+
+        if($request->course == ""){
+            $tempCourse = implode(',', Courses::get()->pluck('id')->toArray());
+        }else{
+            $tempCourse = $request->course;
+        }
+
+        if($request->strand == ""){
+            $tempStrand = implode(',', Strand::get()->pluck('id')->toArray());
+        }else{
+            $tempStrand = $request->strand;
+        }
+
+        if($request->semester == ""){
+            $tempSemester = "1,2";
+        }else{
+            $tempSemester = $request->semester;
+        }
+
+        if($request->gender == ""){
+            $tempGender = "male,female";
+        }else{
+            $tempGender = $request->gender;
+        }
+
+        $enrol = DB::table("VEnrollment")->where('schoolyearfrom',$request->schoolyearfrom)
+        ->where('schoolyearto',$request->schoolyearto)
+        ->when($request->department != "",function($query) use ($tempDepartment){
+            return $query->whereIn("VEnrollment.departmentid",explode(',',$tempDepartment));
+        })
+        ->when($request->grade != "",function($query) use ($tempGrade){
+            return $query->whereIn("VEnrollment.gradeId",explode(',',$tempGrade));
+        })
+        ->when($request->course != "",function($query) use ($tempCourse){
+            return $query->whereIn("VEnrollment.courseId",explode(',',$tempCourse));
+        })
+        ->when($request->strand != "",function($query) use ($tempStrand){
+            return $query->whereIn("VEnrollment.strandId",explode(',',$tempStrand));
+        })
+        ->when($request->semester != "",function($query) use ($tempSemester){
+            return $query->whereIn("VEnrollment.semester",explode(',',$tempSemester));
+        })
+        ->when($request->gender != "",function($query) use ($tempGender){
+            return $query->whereIn("VEnrollment.gender",explode(',',$tempGender));
+        })
+        ->get();
+        return response()->json($enrol, 200);
     }
 }
 
