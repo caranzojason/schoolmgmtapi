@@ -10,6 +10,6 @@ class YearlyFeesDetail extends Model
     use HasFactory;
     protected $primaryKey = 'Id';
     protected $table = 'yearlyfees_detail';
-    protected $fillable = ['Id','yearlyFeesId','description	','amount'];
+    protected $fillable = ['Id','yearlyFeesId','description	','amount','feeType'];
     public $timestamps = false;
 }

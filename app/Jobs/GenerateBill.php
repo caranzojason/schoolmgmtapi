@@ -61,7 +61,7 @@ class GenerateBill implements ShouldQueue
                             $billDetail->amount = $studDetail['amount'] / 10;
                         }
                  
-                        $billDetail->feeType = 0;//todo: do now wat to do
+                        $billDetail->feeType = $studDetail['feeType'];//todo: do now wat to do
                         $billDetail->save();
                     }
                 }

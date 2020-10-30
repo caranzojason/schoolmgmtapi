@@ -54,6 +54,7 @@ class YearlyFeeController extends Controller
                 $yearLeeFee = new YearlyFeesDetail();
                 $yearLeeFee->yearlyFeesId =  $value['yearlyFeesId'];
                 $yearLeeFee->description =  $value['description'];
+                $yearLeeFee->feeType =  $value['feeType'];
                 $yearLeeFee->amount =  $value['amount'];
                 $yearLeeFee->save();
             }
