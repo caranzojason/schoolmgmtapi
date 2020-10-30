@@ -579,31 +579,31 @@ class EnrollmentController extends Controller
             $tempDepartment = $request->department;
         }
 
-        if($request->grade == ""){
+        if(count($request->grade) == 0){
             $tempGrade = Grade::get()->pluck('id')->toArray();// implode(',', Grade::get()->pluck('id')->toArray());
         }else{
             $tempGrade = $request->grade;
         }
 
-        if($request->course == ""){
+        if(count($request->course) == 0){
             $tempCourse = Courses::get()->pluck('id')->toArray(); //implode(',', Courses::get()->pluck('id')->toArray());
         }else{
             $tempCourse = $request->course;
         }
 
-        if($request->strand == ""){
+        if(count($request->strand) == 0){
             $tempStrand =  Strand::get()->pluck('id')->toArray();// implode(',', Strand::get()->pluck('id')->toArray());
         }else{
             $tempStrand = $request->strand;
         }
 
-        if($request->semester == ""){
+        if(count($request->semester) == 0){
             $tempSemester = [1,2];
         }else{
             $tempSemester = $request->semester;
         }
 
-        if($request->gender == ""){
+        if(count($request->gender) == 0){
             $tempGender = ["male","female"];
         }else{
             $tempGender = $request->gender;
