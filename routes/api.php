@@ -81,7 +81,7 @@ Route::get('/studentViewlist/{page?}/{pageSize?}/{searchField?}', 'App\Http\Cont
 
 //billing here
 Route::get('/getBillingAllFee', 'App\Http\Controllers\BillingController@getAllFee');
-Route::get('/getYearlyFeeAccordingtoStudent/{departmentId?}/{gradeId?}/{strandId?}/{semester?}/{schoolyearfrom?}/{schoolyearto?}', 'App\Http\Controllers\BillingController@getYearlyFeeAccordingtoStudent');
+Route::get('/getYearlyFeeAccordingtoStudent/{departmentId?}/{gradeId?}/{strandId?}/{courseId?}/{semester?}/{schoolyearfrom?}/{schoolyearto?}', 'App\Http\Controllers\BillingController@getYearlyFeeAccordingtoStudent');
 Route::get('/getYearlyFeeById/{id?}', 'App\Http\Controllers\YearlyFeeController@getYearlyFeeById');
 Route::get('/getYearlyFeeDetailByMastereId/{masterId?}', 'App\Http\Controllers\YearlyFeeController@getYearlyFeeDetailByMastereId');
 Route::post('/saveYearlyFee','App\Http\Controllers\YearlyFeeController@saveYearlyFee');

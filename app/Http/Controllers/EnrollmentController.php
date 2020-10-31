@@ -609,7 +609,12 @@ class EnrollmentController extends Controller
             $tempGender = $request->gender;
         }
 
-        $enrol = DB::table("VEnrollment")->where('schoolyearfrom',$request->schoolyearfrom)
+        $enrol = DB::table("VEnrollment")->orderby('departmentid','ASC')
+        ->orderby('gradeid')
+        ->orderby('strandId')
+        ->orderby('courseId')
+        ->orderby('name')
+        ->where('schoolyearfrom',$request->schoolyearfrom)
         ->where('schoolyearto',$request->schoolyearto)
         ->when(count($request->department)>0,function($query) use ($tempDepartment){
             return $query->whereIn("VEnrollment.departmentid",$tempDepartment);
@@ -630,29 +635,8 @@ class EnrollmentController extends Controller
             return $query->whereIn("VEnrollment.gender",$tempGender);
         })
         ->get();
+        //->orderby('department')->orderby('grade');
 
-
-        // $enrol = DB::table("VEnrollment")->where('schoolyearfrom',$request->schoolyearfrom)
-        // ->where('schoolyearto',$request->schoolyearto)
-        // ->when($request->department != "",function($query) use ($tempDepartment){
-        //     return $query->whereIn("VEnrollment.departmentid",explode(',',$tempDepartment));
-        // })
-        // ->when($request->grade != "",function($query) use ($tempGrade){
-        //     return $query->whereIn("VEnrollment.gradeId",explode(',',$tempGrade));
-        // })
-        // ->when($request->course != "",function($query) use ($tempCourse){
-        //     return $query->whereIn("VEnrollment.courseId",explode(',',$tempCourse));
-        // })
-        // ->when($request->strand != "",function($query) use ($tempStrand){
-        //     return $query->whereIn("VEnrollment.strandId",explode(',',$tempStrand));
-        // })
-        // ->when($request->semester != "",function($query) use ($tempSemester){
-        //     return $query->whereIn("VEnrollment.semester",explode(',',$tempSemester));
-        // })
-        // ->when($request->gender != "",function($query) use ($tempGender){
-        //     return $query->whereIn("VEnrollment.gender",explode(',',$tempGender));
-        // })
-        // ->get();
         return response()->json($enrol, 200);
     }
 

@@ -23,14 +23,20 @@ class BillingController extends Controller
         return response()->json($classes);
     }
 
-    public function getYearlyFeeAccordingtoStudent($departmentId=0,$gradeId=0,$strandId=0,$semester=0,$schoolyearfrom=0,$schoolyearto=0)
+    public function getYearlyFeeAccordingtoStudent($departmentId=0,$gradeId=0,$strandId=0,$courseId=0,$semester=0,$schoolyearfrom=0,$schoolyearto=0)
     {
         $yearlyFee = Yearlyfees::where('departmentId', $departmentId)
-         ->where('gradeId',$gradeId)->where('strandId',$strandId)
-         ->where('semester',$semester)->where('schoolyearfrom',$schoolyearfrom)->where('schoolyearto',$schoolyearto)->first();
+         ->where('gradeId',$gradeId)->where('strandId',$strandId)->where('courseId',$courseId)
+         ->where('semester',$semester)->where('schoolyearfrom',$schoolyearfrom)
+         ->where('schoolyearto',$schoolyearto)->first();
 
-         $yearlyFeeDetail = YearlyFeesDetail::where('yearlyFeesId', $yearlyFee->Id)->get();
-        return response()->json($yearlyFeeDetail);
+         if($yearlyFee!=null){
+            $yearlyFeeDetail = YearlyFeesDetail::where('yearlyFeesId', $yearlyFee->Id)->get();
+            return response()->json($yearlyFeeDetail);
+         }else{
+             return response()->json([]);
+         }
+    
     }
 
     public function generateBill($yearFrom,$yearTo)
