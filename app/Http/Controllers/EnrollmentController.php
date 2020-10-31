@@ -655,5 +655,30 @@ class EnrollmentController extends Controller
         // ->get();
         return response()->json($enrol, 200);
     }
+
+    public function getEnrolElementary($schoolYearFrom,$schoolYearTo)
+    {
+        $bill = DB::select('call sproc_enrollelementary(?,?)',[$schoolYearFrom,$schoolYearTo]);
+        return response()->json($bill);
+    }
+
+    public function getEnroljuniorhigh($schoolYearFrom,$schoolYearTo)
+    {
+        $bill = DB::select('call sproc_enroljuniohigh(?,?)',[$schoolYearFrom,$schoolYearTo]);
+        return response()->json($bill);
+    }
+    public function getEnrolsenior($schoolYearFrom,$schoolYearTo)
+    {
+        $bill = DB::select('call sproc_enrollseniorhigh(?,?)',[$schoolYearFrom,$schoolYearTo]);
+        return response()->json($bill);
+    }
+    public function getEnrolcollege($schoolYearFrom,$schoolYearTo)
+    {
+        $bill = DB::select('call sproc_enrollcollege(?,?)',[$schoolYearFrom,$schoolYearTo]);
+        return response()->json($bill);
+    }
+
+
+
 }
 

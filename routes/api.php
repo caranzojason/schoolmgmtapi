@@ -54,6 +54,10 @@ Route::get('/enrollgetForverification','App\Http\Controllers\EnrollmentControlle
 Route::get('/enrollmentretrievefile','App\Http\Controllers\EnrollmentController@retrieveFile');
 Route::get('/enrollmentgetPayment/{refNo}','App\Http\Controllers\EnrollmentController@getPayment');
 Route::post('/getEnrolment','App\Http\Controllers\EnrollmentController@getEnrolment');
+Route::get('/getEnrolElementary/{schoolYearFrom?}/{schoolYearTo?}', 'App\Http\Controllers\EnrollmentController@getEnrolElementary');
+Route::get('/getEnroljuniorhigh/{schoolYearFrom?}/{schoolYearTo?}', 'App\Http\Controllers\EnrollmentController@getEnroljuniorhigh');
+Route::get('/getEnrolsenior/{schoolYearFrom?}/{schoolYearTo?}', 'App\Http\Controllers\EnrollmentController@getEnrolsenior');
+Route::get('/getEnrolcollege/{schoolYearFrom?}/{schoolYearTo?}', 'App\Http\Controllers\EnrollmentController@getEnrolcollege');
 
 
 //payment here
