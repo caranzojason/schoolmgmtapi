@@ -66,25 +66,35 @@ class StudentController extends Controller
 
             if($searchField != ""){
          
-                $student= Student::Where('lastname','LIKE','%'.$searchField.'%')
-                ->orWhere('firstname','LIKE','%'.$searchField.'%')
-                ->orWhere('email','LIKE','%'.$searchField.'%')->orderby('lastname')->skip($page)->take($pageSize)->get();
-
-                $countStudent = Student::where('ref_no','LIKE','%'.$searchField.'%')
+                $student=  DB::table("VStudent")
                 ->Where('lastname','LIKE','%'.$searchField.'%')
                 ->orWhere('firstname','LIKE','%'.$searchField.'%')
-                ->orWhere('email','LIKE','%'.$searchField.'%')->orderby('lastname')->count();
+                ->orWhere('email','LIKE','%'.$searchField.'%')
+                ->orWhere('studentno','LIKE','%'.$searchField.'%')
+                ->orWhere('strandname','LIKE','%'.$searchField.'%')
+                ->orWhere('coursename','LIKE','%'.$searchField.'%')
+                ->orderby('lastname')->skip($page)->take($pageSize)->get();
+
+                $countStudent =  DB::table("VStudent")
+                ->Where('lastname','LIKE','%'.$searchField.'%')
+                ->orWhere('firstname','LIKE','%'.$searchField.'%')
+                ->orWhere('studentno','LIKE','%'.$searchField.'%')
+                ->orWhere('email','LIKE','%'.$searchField.'%')
+                ->orWhere('strandname','LIKE','%'.$searchField.'%')
+                ->orWhere('coursename','LIKE','%'.$searchField.'%')
+                ->orderby('lastname')->count();
 
                 $stud->Student = $student;
                 $stud->NoOfRecords = $countStudent;
                 return response()->json($stud, 200);
             }else{
-                $student = Student::skip($page)->take($pageSize)->orderby('lastname')->get();
+                $student =  DB::table("VStudent")->skip($page)->take($pageSize)->orderby('lastname')->get();
 
-                $countStudent = Student::Where('lastname','LIKE','%'.$searchField.'%')
+                $countStudent =  DB::table("VStudent")->Where('lastname','LIKE','%'.$searchField.'%')
                 ->orWhere('firstname','LIKE','%'.$searchField.'%')
-                ->orWhere('email','LIKE','%'.$searchField.'%')->orderby('lastname')->count();
-
+                ->orWhere('email','LIKE','%'.$searchField.'%')->orderby('lastname')
+                ->orWhere('strandname','LIKE','%'.$searchField.'%')
+                ->orWhere('coursename','LIKE','%'.$searchField.'%')->count();
                 $stud->Student = $student;
                 $stud->NoOfRecords = $countStudent;
                 return response()->json($stud, 200);
@@ -100,11 +110,12 @@ class StudentController extends Controller
 
             if($searchField != ""){
          
-                $student= DB::table("VStudent")->where('lastname','LIKE','%'.$searchField.'%')
+                $student= DB::table("VStudent")
+                ->where('lastname','LIKE','%'.$searchField.'%')
                 ->orWhere('firstname','LIKE','%'.$searchField.'%')
                 ->orWhere('email','LIKE','%'.$searchField.'%')->orderby('lastname')->skip($page)->take($pageSize)->get();
 
-                $countStudent = DB::table("VStudent")->where('ref_no','LIKE','%'.$searchField.'%')
+                $countStudent = DB::table("VStudent")
                 ->Where('lastname','LIKE','%'.$searchField.'%')
                 ->orWhere('firstname','LIKE','%'.$searchField.'%')
                 ->orWhere('email','LIKE','%'.$searchField.'%')->orderby('lastname')->count();

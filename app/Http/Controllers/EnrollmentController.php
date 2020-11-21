@@ -566,12 +566,20 @@ class EnrollmentController extends Controller
 
     public function getEnrolment(Request $request)
     {
+        $tempType = "";
         $tempDepartment = "";
         $tempGrade = "";
         $tempCourse = "";
         $tempStrand = "";
         $tempSemester = "";
         $tempGender = "";
+
+        if(count($request->type) > 0){
+            $tempType = $request->type;
+        }else{
+            $tempType = [];
+        }
+
 
         if(count($request->department) == 0){
             $tempDepartment =  Department::get()->pluck('id')->toArray();// implode(',', Department::get()->pluck('id')->toArray());
@@ -633,6 +641,9 @@ class EnrollmentController extends Controller
         })
         ->when(count($request->gender)>0,function($query) use ($tempGender){
             return $query->whereIn("VEnrollment.gender",$tempGender);
+        })
+        ->when(count($request->type)>0,function($query) use ($tempType){
+            return $query->whereIn("VEnrollment.type",$tempType);
         })
         ->get();
         //->orderby('department')->orderby('grade');
