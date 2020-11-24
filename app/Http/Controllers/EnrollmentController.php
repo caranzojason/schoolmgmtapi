@@ -487,9 +487,9 @@ class EnrollmentController extends Controller
                 $payment->NoOfRecords = $countPayment;
                 return response()->json($payment, 200);
             }else{
-                $paymentList = EnrollmentPayment::where('approval_status','=',0)->skip($page)->take($pageSize)->orderby('ref_no')->get();
+                $paymentList = EnrollmentPayment::where('status','=','ForApproval')->skip($page)->take($pageSize)->orderby('ref_no')->get();
 
-                $countPayment = EnrollmentPayment::where('approval_status','=',0)->count();
+                $countPayment = EnrollmentPayment::where('status','=','ForApproval')->count();
 
                 $payment->EnrollmentPayment = $paymentList;
                 $payment->NoOfRecords = $countPayment;

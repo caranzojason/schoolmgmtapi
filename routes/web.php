@@ -18,3 +18,7 @@ Route::get('/', function () {
 });
 
 Route::get('/customer/print-pdf', [ 'as' => 'customer.printpdf', 'uses' => 'App\Http\Controllers\TestPDFController@printPDF']);
+
+Route::get('/linkstorage', function () {
+    Artisan::call('storage:link');
+});
