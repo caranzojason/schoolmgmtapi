@@ -487,9 +487,9 @@ class EnrollmentController extends Controller
                 $payment->NoOfRecords = $countPayment;
                 return response()->json($payment, 200);
             }else{
-                $paymentList = EnrollmentPayment::where('approval_status','=',0)->skip($page)->take($pageSize)->orderby('ref_no')->get();
+                $paymentList = EnrollmentPayment::where('status','=','ForApproval')->skip($page)->take($pageSize)->orderby('ref_no')->get();
 
-                $countPayment = EnrollmentPayment::where('approval_status','=',0)->count();
+                $countPayment = EnrollmentPayment::where('status','=','ForApproval')->count();
 
                 $payment->EnrollmentPayment = $paymentList;
                 $payment->NoOfRecords = $countPayment;
@@ -566,6 +566,7 @@ class EnrollmentController extends Controller
 
     public function getEnrolment(Request $request)
     {
+        $tempType = "";
         $tempDepartment = "";
         $tempGrade = "";
         $tempCourse = "";
@@ -573,6 +574,13 @@ class EnrollmentController extends Controller
         $tempSemester = "";
         $tempGender = "";
         $tempStatus = "";
+
+        if(count($request->type) > 0){
+            $tempType = $request->type;
+        }else{
+            $tempType = [];
+        }
+
 
         if(count($request->department) == 0){
             $tempDepartment =  Department::get()->pluck('id')->toArray();// implode(',', Department::get()->pluck('id')->toArray());
@@ -639,6 +647,8 @@ class EnrollmentController extends Controller
         ->when(count($request->gender)>0,function($query) use ($tempGender){
             return $query->whereIn("VEnrollment.gender",$tempGender);
         })
+        ->when(count($request->type)>0,function($query) use ($tempType){
+            return $query->whereIn("VEnrollment.type",$tempType);
         ->when(count($request->status)>0,function($query) use ($tempStatus){
             return $query->whereIn("VEnrollment.status",$tempStatus);
         })
