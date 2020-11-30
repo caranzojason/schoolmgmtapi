@@ -572,6 +572,7 @@ class EnrollmentController extends Controller
         $tempStrand = "";
         $tempSemester = "";
         $tempGender = "";
+        $tempStatus = "";
 
         if(count($request->department) == 0){
             $tempDepartment =  Department::get()->pluck('id')->toArray();// implode(',', Department::get()->pluck('id')->toArray());
@@ -608,7 +609,11 @@ class EnrollmentController extends Controller
         }else{
             $tempGender = $request->gender;
         }
-
+        if(count($request->status) == 0){
+            $tempGender = ["male","female"];
+        }else{
+            $tempStatus = $request->status;
+        }
         $enrol = DB::table("VEnrollment")->orderby('departmentid','ASC')
         ->orderby('gradeid')
         ->orderby('strandId')
@@ -633,6 +638,9 @@ class EnrollmentController extends Controller
         })
         ->when(count($request->gender)>0,function($query) use ($tempGender){
             return $query->whereIn("VEnrollment.gender",$tempGender);
+        })
+        ->when(count($request->status)>0,function($query) use ($tempStatus){
+            return $query->whereIn("VEnrollment.status",$tempStatus);
         })
         ->get();
         //->orderby('department')->orderby('grade');
