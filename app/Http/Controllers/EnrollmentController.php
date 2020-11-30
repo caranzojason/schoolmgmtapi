@@ -383,7 +383,7 @@ class EnrollmentController extends Controller
 
             $enrollmentPayment = EnrollmentPayment::where('enrollment_ref_no', $request->enrolId)->first();
             $enrollmentPayment->filename =  $originalname;
-            $enrollmentPayment->attachmentpath = 'storage/' . $request->enrolId . '/' . $originalname;
+            $enrollmentPayment->attachmentpath =   $request->enrolId . '/' . $originalname;
             $enrollmentPayment->save();
         }        
 
@@ -624,7 +624,7 @@ class EnrollmentController extends Controller
             $tempStatus = $request->status;
         }
 
-        $enrol = DB::table("VEnrollment")->orderby('departmentid','ASC')
+        $enrol = DB::table("venrollment")->orderby('departmentid','ASC')
         ->orderby('gradeid')
         ->orderby('strandId')
         ->orderby('courseId')
@@ -632,25 +632,25 @@ class EnrollmentController extends Controller
         ->where('schoolyearfrom',$request->schoolyearfrom)
         ->where('schoolyearto',$request->schoolyearto)
         ->when(count($request->department)>0,function($query) use ($tempDepartment){
-            return $query->whereIn("VEnrollment.departmentid",$tempDepartment);
+            return $query->whereIn("venrollment.departmentid",$tempDepartment);
         })
         ->when(count($request->grade)>0,function($query) use ($tempGrade){
-            return $query->whereIn("VEnrollment.gradeId",$tempGrade);
+            return $query->whereIn("venrollment.gradeId",$tempGrade);
         })
         ->when(count($request->course)>0,function($query) use ($tempCourse){
-            return $query->whereIn("VEnrollment.courseId",$tempCourse);
+            return $query->whereIn("venrollment.courseId",$tempCourse);
         })
         ->when(count($request->strand)>0,function($query) use ($tempStrand){
-            return $query->whereIn("VEnrollment.strandId",$tempStrand);
+            return $query->whereIn("venrollment.strandId",$tempStrand);
         })
         ->when(count($request->semester)>0,function($query) use ($tempSemester){
-            return $query->whereIn("VEnrollment.semester",$tempSemester);
+            return $query->whereIn("venrollment.semester",$tempSemester);
         })
         ->when(count($request->gender)>0,function($query) use ($tempGender){
-            return $query->whereIn("VEnrollment.gender",$tempGender);
+            return $query->whereIn("venrollment.gender",$tempGender);
         })
         ->when(count($request->type)>0,function($query) use ($tempType){
-            return $query->whereIn("VEnrollment.type",$tempType);
+            return $query->whereIn("venrollment.type",$tempType);
         })
         ->when(count($request->status)>0,function($query) use ($tempStatus){
             return $query->whereIn("VEnrollment.status",$tempStatus);
