@@ -618,10 +618,12 @@ class EnrollmentController extends Controller
             $tempGender = $request->gender;
         }
         if(count($request->status) == 0){
-            $tempGender = ["male","female"];
+            $tempStatus = ["verified","deleted","ForPayment","approved","pending","cancelled","inactive","O","PaymentForApproval"];
+            //$tempStatus =  Stat::get()->pluck('id')->toArray();// implode(',', Strand::get()->pluck('id')->toArray());
         }else{
             $tempStatus = $request->status;
         }
+
         $enrol = DB::table("VEnrollment")->orderby('departmentid','ASC')
         ->orderby('gradeid')
         ->orderby('strandId')
@@ -649,6 +651,7 @@ class EnrollmentController extends Controller
         })
         ->when(count($request->type)>0,function($query) use ($tempType){
             return $query->whereIn("VEnrollment.type",$tempType);
+        })
         ->when(count($request->status)>0,function($query) use ($tempStatus){
             return $query->whereIn("VEnrollment.status",$tempStatus);
         })
