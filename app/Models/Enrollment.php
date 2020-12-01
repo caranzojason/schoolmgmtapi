@@ -58,7 +58,8 @@ class Enrollment extends Model
     'school_year',
     'schoolyearfrom',
     'schoolyearto',
-    'semester'];
+    'semester',
+    'subjectToEnroll'];
     public $timestamps = false;
 }
 

@@ -137,6 +137,7 @@ class EnrollmentController extends Controller
             $enroll->schoolyearfrom =  $request->schoolyearfrom;
             $enroll->schoolyearto =  $request->schoolyearto;
             $enroll->semester =  $request->semester;
+            $enroll->subjectToEnroll =  $request->subjectToEnroll;
             $enroll->save();
 
             $resp->ref_no = $enroll->ref_no;
@@ -197,6 +198,7 @@ class EnrollmentController extends Controller
             $enroll->remarks =  $request->remarks;
             $enroll->created_at =  $request->created_at;
             $enroll->school_year =  $request->school_year;
+            $enroll->subjectToEnroll =  $request->subjectToEnroll;
             $enroll->save();
             return response()->json([
                 "message" => "Succesfully updated"
@@ -257,6 +259,7 @@ class EnrollmentController extends Controller
             $enroll->remarks =  $request->remarks;
             $enroll->created_at =  $request->created_at;
             $enroll->school_year =  $request->school_year;
+            $enroll->subjectToEnroll =  $request->subjectToEnroll;
         
            $enroll->save();
             return response()->json($request, 200);
