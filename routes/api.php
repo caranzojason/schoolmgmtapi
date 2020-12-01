@@ -76,6 +76,7 @@ Route::post('/login','App\Http\Controllers\UserController@login');
 
 //Student here
 Route::post('/createStudent','App\Http\Controllers\StudentController@createStudent');
+Route::post('/updateStudent','App\Http\Controllers\StudentController@updateStudent');
 Route::get('/studentlist/{page?}/{pageSize?}/{searchField?}', 'App\Http\Controllers\StudentController@studentlist');
 Route::get('/studentViewlist/{page?}/{pageSize?}/{searchField?}', 'App\Http\Controllers\StudentController@studentViewlist');
 
