@@ -51,6 +51,7 @@ Route::post('/updateEnrol','App\Http\Controllers\EnrollmentController@updateEnro
 Route::post('/enrolVerify','App\Http\Controllers\EnrollmentController@enrolVerify');
 Route::post('/updateInquiry','App\Http\Controllers\EnrollmentController@updateInquiry');
 Route::get('/enrollgetForverification','App\Http\Controllers\EnrollmentController@getForverification');
+Route::get('/enrollgetgetForwalkin','App\Http\Controllers\EnrollmentController@getForwalkin');
 Route::get('/enrollmentretrievefile','App\Http\Controllers\EnrollmentController@retrieveFile');
 Route::get('/enrollmentgetPayment/{refNo}','App\Http\Controllers\EnrollmentController@getPayment');
 Route::post('/getEnrolment','App\Http\Controllers\EnrollmentController@getEnrolment');
