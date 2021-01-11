@@ -32,6 +32,12 @@ class EnrollmentController extends Controller
         $enrollment = Enrollment::Where('status', '=', 'pending')->orderBy('created_at','DESC')->get();
         return response()->json($enrollment, 200);
     }
+    
+     public function getForwalkin()
+    {
+        $enrollment = Enrollment::Where('status', '=', 'ForPayment')->orderBy('created_at','DESC')->get();
+        return response()->json($enrollment, 200);
+    }
 
     public function getByEnrolRefNo($refNo)
     {
