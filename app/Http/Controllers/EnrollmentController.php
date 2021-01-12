@@ -204,6 +204,8 @@ class EnrollmentController extends Controller
             $enroll->remarks =  $request->remarks;
             $enroll->created_at =  $request->created_at;
             $enroll->school_year =  $request->school_year;
+                   $enroll->schoolyearfrom =  $request->schoolyearfrom;
+            $enroll->schoolyearto =  $request->schoolyearto;
             $enroll->subjectToEnroll =  $request->subjectToEnroll;
             $enroll->save();
             return response()->json([
@@ -325,6 +327,8 @@ class EnrollmentController extends Controller
             $enroll->remarks =  $request->remarks;
             $enroll->created_at =  $request->created_at;
             $enroll->school_year =  $request->school_year;
+                   $enroll->schoolyearfrom =  $request->schoolyearfrom;
+            $enroll->schoolyearto =  $request->schoolyearto;
         
            $enroll->save();
             return response()->json($request, 200);
